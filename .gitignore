@@ -1,6 +1,48 @@
+# Python
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtualenvs
 .venv/
+venv/
+env/
+
+# Build / packaging
 dist/
+build/
 *.egg-info/
+
+# uv / pip lockfiles (platform-specific)
+uv.lock
+requirements*.txt
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Environment
 .env
+.env.*
+
+# Model cache (Whisper downloads here, can be hundreds of MB)
+.cache/
+
+# Scrapling browser state
+.scrapling/
+
+# Temp / session files
+*.tmp
+*.log
