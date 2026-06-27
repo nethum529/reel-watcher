@@ -1,6 +1,7 @@
 import glob
 import os
 import subprocess
+import sys
 import tempfile
 
 from mcp.server.fastmcp import FastMCP
@@ -10,7 +11,7 @@ mcp = FastMCP("reel-watcher")
 
 def _clean_srt(content: str) -> str:
     lines = content.split("\n")
-    result = []
+    text_lines = []
     skip_timestamp = False
     for line in lines:
         line = line.strip()
@@ -22,7 +23,27 @@ def _clean_srt(content: str) -> str:
         if skip_timestamp and "-->" in line:
             skip_timestamp = False
             continue
-        result.append(line)
+        text_lines.append(line)
+
+    # YouTube rolling captions: each new block overlaps with the end of the previous.
+    # Fix by detecting when the current word starts a sequence already at the tail of our result.
+    words = " ".join(text_lines).split()
+    result = []
+    i = 0
+    while i < len(words):
+        if result:
+            skipped = False
+            for overlap in range(min(20, len(result), len(words) - i), 1, -1):
+                if result[-overlap:] == words[i:i + overlap]:
+                    i += overlap
+                    skipped = True
+                    break
+            if not skipped:
+                result.append(words[i])
+                i += 1
+        else:
+            result.append(words[i])
+            i += 1
     return " ".join(result)
 
 
@@ -35,7 +56,7 @@ def get_transcript(url: str, lang: str = "en") -> str:
         # Fast path: caption extraction (YouTube / Shorts with auto-captions)
         subprocess.run(
             [
-                "yt-dlp",
+                sys.executable, "-m", "yt_dlp",
                 "--write-auto-sub",
                 "--sub-lang", lang,
                 "--skip-download",
@@ -55,7 +76,7 @@ def get_transcript(url: str, lang: str = "en") -> str:
         audio_template = os.path.join(tmp, "audio.%(ext)s")
         result = subprocess.run(
             [
-                "yt-dlp",
+                sys.executable, "-m", "yt_dlp",
                 "-x",
                 "--audio-format", "mp3",
                 "--output", audio_template,
