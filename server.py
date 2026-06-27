@@ -1,5 +1,6 @@
 import glob
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -7,6 +8,30 @@ import tempfile
 from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("reel-watcher")
+
+_BROWSER_CANDIDATES = ["chrome", "chromium", "firefox", "edge", "opera", "safari"]
+
+def _detect_browser() -> str | None:
+    executables = {
+        "chrome": ["google-chrome", "google-chrome-stable", "chrome"],
+        "chromium": ["chromium", "chromium-browser"],
+        "firefox": ["firefox", "firefox-esr"],
+        "edge": ["microsoft-edge", "msedge"],
+        "opera": ["opera"],
+        "safari": ["safari"],
+    }
+    for browser, bins in executables.items():
+        if any(shutil.which(b) for b in bins):
+            return browser
+    return None
+
+_BROWSER = _detect_browser()
+
+def _ytdlp(*args: str) -> list[str]:
+    cmd = [sys.executable, "-m", "yt_dlp"]
+    if _BROWSER:
+        cmd += ["--cookies-from-browser", _BROWSER]
+    return cmd + list(args)
 
 
 def _clean_srt(content: str) -> str:
@@ -55,15 +80,14 @@ def get_transcript(url: str, lang: str = "en") -> str:
 
         # Fast path: caption extraction (YouTube / Shorts with auto-captions)
         subprocess.run(
-            [
-                sys.executable, "-m", "yt_dlp",
+            _ytdlp(
                 "--write-auto-sub",
                 "--sub-lang", lang,
                 "--skip-download",
                 "--convert-subs", "srt",
                 "--output", out_template,
                 url,
-            ],
+            ),
             capture_output=True,
             text=True,
         )
@@ -75,13 +99,12 @@ def get_transcript(url: str, lang: str = "en") -> str:
         # Fallback: download audio then transcribe with Whisper
         audio_template = os.path.join(tmp, "audio.%(ext)s")
         result = subprocess.run(
-            [
-                sys.executable, "-m", "yt_dlp",
+            _ytdlp(
                 "-x",
                 "--audio-format", "mp3",
                 "--output", audio_template,
                 url,
-            ],
+            ),
             capture_output=True,
             text=True,
         )
@@ -99,6 +122,32 @@ def get_transcript(url: str, lang: str = "en") -> str:
         segments, _ = model.transcribe(audio_files[0], language=lang)
         text = " ".join(s.text.strip() for s in segments)
         return text or "[no speech detected]"
+
+
+@mcp.tool()
+def get_transcripts_from_page(url: str, lang: str = "en") -> list:
+    """Get transcripts from all videos on an Instagram saved folder, profile, or playlist URL."""
+    result = subprocess.run(
+        _ytdlp("--flat-playlist", "--print", "webpage_url", url),
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"Failed to list videos: {result.stderr[:400]}")
+
+    urls = [u.strip() for u in result.stdout.strip().splitlines() if u.strip()]
+    if not urls:
+        raise RuntimeError("No videos found at that URL")
+
+    transcripts = []
+    for video_url in urls:
+        try:
+            transcript = get_transcript(video_url, lang=lang)
+        except Exception as e:
+            transcript = f"[error: {e}]"
+        transcripts.append({"url": video_url, "transcript": transcript})
+
+    return transcripts
 
 
 def main():
