@@ -1,14 +1,13 @@
 ```
-┌─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
-│ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │
-├─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┤
-│                                                                │
-│              r e e l  ─  w a t c h e r                        │
-│         paste a link. get the text. no config.                 │
-│                                                                │
-├─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┤
-│ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │
-└─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
+  · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
+  ┌─────────────────────────────────────────────────────────────┐
+  │                                                             │
+  │   ╭────╮                                       ╭────╮     │
+  │   │ () │       r e e l - w a t c h e r         │ () │     │
+  │   ╰────╯    paste a link · get the transcript  ╰────╯     │
+  │                                                             │
+  └─────────────────────────────────────────────────────────────┘
+  · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
 ```
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square) ![License](https://img.shields.io/badge/license-MIT-green?style=flat-square) ![MCP](https://img.shields.io/badge/MCP-server-purple?style=flat-square) ![GPU](https://img.shields.io/badge/Whisper-GPU%20accelerated-orange?style=flat-square)
