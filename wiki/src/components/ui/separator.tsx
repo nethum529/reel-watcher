@@ -1,0 +1,26 @@
+import type { HTMLAttributes } from 'react'
+import { cn } from '@/lib/utils'
+
+interface SeparatorProps extends HTMLAttributes<HTMLDivElement> {
+  orientation?: 'horizontal' | 'vertical'
+}
+
+// 1px hairline (DESIGN §6.7). Decorative by default (presentation role).
+export function Separator({
+  className,
+  orientation = 'horizontal',
+  ...props
+}: SeparatorProps) {
+  return (
+    <div
+      role="separator"
+      aria-orientation={orientation}
+      className={cn(
+        'shrink-0 bg-border',
+        orientation === 'horizontal' ? 'h-px w-full' : 'h-full w-px',
+        className,
+      )}
+      {...props}
+    />
+  )
+}

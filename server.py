@@ -30,6 +30,11 @@ import ctranslate2
 import requests as _requests
 from mcp.server.fastmcp import FastMCP
 
+import cache
+import search
+import tagging
+import wiki_export
+
 mcp = FastMCP("reel-watcher")
 
 _DEVICE = "cuda" if ctranslate2.get_cuda_device_count() > 0 else "cpu"
@@ -260,6 +265,16 @@ def _list_videos_from_page(url: str) -> list[str]:
 # MCP tools
 # ---------------------------------------------------------------------------
 
+def _source_from_url(url: str) -> str:
+    if "instagram.com" in url:
+        return "instagram"
+    if "tiktok.com" in url:
+        return "tiktok"
+    if "youtube.com" in url or "youtu.be" in url:
+        return "youtube"
+    return ""
+
+
 @mcp.tool()
 def get_transcript(url: str, lang: str = "en") -> str:
     """Get all text content from a short-form video or image carousel URL.
@@ -271,12 +286,17 @@ def get_transcript(url: str, lang: str = "en") -> str:
 
     Supports YouTube, YouTube Shorts, TikTok, Instagram Reels, and Instagram carousels.
     """
+    hit = cache.cache_get(url)
+    if hit:
+        return hit["content"]
+
     parts: list[str] = []
 
     caption = _get_caption(url)
     if caption:
         parts.append(f"[Caption]\n{caption}")
 
+    ocr_text = ""
     with tempfile.TemporaryDirectory() as tmp:
         transcript, is_carousel = _get_video_transcript(url, lang, tmp)
 
@@ -289,7 +309,20 @@ def get_transcript(url: str, lang: str = "en") -> str:
             if ocr_text:
                 parts.append(f"[Slides]\n{ocr_text}")
 
-    return "\n\n".join(parts) or "[no content extracted]"
+    content = "\n\n".join(parts) or "[no content extracted]"
+    if content != "[no content extracted]":
+        tags = tagging.auto_tag(content)
+        cache.cache_set(
+            url,
+            content=content,
+            caption=caption,
+            transcript=transcript,
+            slides=ocr_text,
+            source=_source_from_url(url),
+            tags=tags,
+        )
+
+    return content
 
 
 @mcp.tool()
@@ -312,6 +345,21 @@ def get_transcripts_from_page(url: str, lang: str = "en") -> list:
         results.append({"url": video_url, "content": content})
 
     return results
+
+
+@mcp.tool()
+def search_cache(query: str, limit: int = 20) -> list:
+    """Search cached transcript content and return matching posts."""
+    return search.search_cache(query, limit)
+
+
+@mcp.tool()
+def build_wiki(
+    output_dir: str = "~/.cache/reel-watcher/wiki",
+    open_browser: bool = True,
+) -> str:
+    """Build the cached transcript wiki and optionally open it in a browser."""
+    return wiki_export.build_wiki(output_dir, open_browser)
 
 
 def main() -> None:
