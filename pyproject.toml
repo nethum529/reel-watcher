@@ -4,14 +4,23 @@ build-backend = "hatchling.build"
 
 [project]
 name = "reel-watcher"
-version = "0.1.0"
+version = "0.2.0"
 description = "MCP server — get transcripts from YouTube, TikTok, and Instagram Reels"
 requires-python = ">=3.10"
 dependencies = [
     "mcp[cli]>=1.0.0",
     "yt-dlp>=2024.1.0",
     "faster-whisper>=1.0.0",
+    "browser-cookie3>=0.19.0",
+    "scrapling[all]>=0.4.0",
+    "pytesseract>=0.3.10",
+    "pillow>=10.0.0",
+    "requests>=2.31.0",
+    "ctranslate2>=4.0.0",
 ]
 
 [project.scripts]
 reel-watcher = "server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
