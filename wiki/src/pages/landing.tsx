@@ -13,6 +13,21 @@ function enter(delayMs: number) {
 // The dramatic entry (#/, DESIGN §13): full-bleed warm near-black — the deepest
 // material, distinct from the green wiki it gates — with one gold-leaf type
 // moment and a single Enter affordance, in maximum *ma*. No sidebar, no chrome.
+//
+// Surface: a user-requested exception to the no-decorative-gradient rule. Kept
+// lacquer-quiet — deep-green (--background) pooled at center fading to warm-black
+// (--sidebar-background) at the edges, with a low-alpha gold-leaf glow behind the
+// wordmark. Stops are token-built and chosen so every text pair clears AA against
+// the glow's peak (lightest underlying point): parchment ~11.7:1, muted overline/
+// count ~6.6:1, gold "Enter" link ~5.2:1. Static (no animation → reduced-motion safe).
+const surface: CSSProperties = {
+  backgroundColor: 'hsl(var(--sidebar-background))', // warm-black floor (fallback)
+  backgroundImage: [
+    'radial-gradient(ellipse 58% 42% at 50% 40%, hsl(var(--primary) / 0.07), transparent 72%)',
+    'radial-gradient(ellipse 130% 95% at 50% 42%, hsl(var(--background)), hsl(var(--sidebar-background)) 80%)',
+  ].join(', '),
+}
+
 export function LandingPage() {
   const state = useData()
   const posts = state.status === 'ready' ? state.data.posts : []
@@ -21,7 +36,10 @@ export function LandingPage() {
   const hasCounts = state.status === 'ready' && posts.length > 0
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-sidebar px-6 py-24 text-center">
+    <main
+      style={surface}
+      className="flex min-h-screen flex-col items-center justify-center px-6 py-24 text-center"
+    >
       <p
         className="landing-enter font-sans text-overline font-semibold uppercase tracking-[0.18em] text-muted-foreground"
         style={enter(0)}
