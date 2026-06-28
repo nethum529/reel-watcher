@@ -1,0 +1,189 @@
+@import 'tailwindcss';
+
+/* Self-hosted variable fonts (font-display: swap, no third-party origin). */
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/newsreader';
+
+/* ---------------------------------------------------------------------------
+   Token source of truth (DESIGN.md §0). HSL channels, consumed as hsl(var()).
+   Dark is the only theme in v1. This :root block is the ONLY place colors live.
+--------------------------------------------------------------------------- */
+@layer base {
+  :root {
+    /* surfaces */
+    --background: 0 0% 6%;          /* #0F0F0F  brand anchor, held neutral */
+    --foreground: 240 9% 96%;       /* #F4F4F6 */
+    --card: 240 6% 9%;              /* #161618 */
+    --card-foreground: 240 9% 96%;
+    --popover: 240 6% 11%;          /* #1B1B1E */
+    --popover-foreground: 240 9% 96%;
+
+    /* brand accent */
+    --primary: 233 66% 74%;         /* #8F9AE8 periwinkle */
+    --primary-foreground: 240 9% 7%;/* #111114 dark text on accent */
+
+    /* recessed / secondary */
+    --secondary: 240 6% 14%;        /* #212126 */
+    --secondary-foreground: 240 9% 96%;
+    --muted: 240 6% 14%;            /* #212126 */
+    --muted-foreground: 240 6% 65%; /* #A1A1AC */
+    --accent: 240 6% 16%;           /* #26262B  shadcn hover-surface (NOT brand accent) */
+    --accent-foreground: 240 9% 96%;
+
+    /* status */
+    --destructive: 6 70% 67%;       /* #E5736B */
+    --destructive-foreground: 240 9% 7%;
+
+    /* lines & focus */
+    --border: 240 7% 18%;           /* #2B2B30 */
+    --input: 240 7% 18%;            /* #2B2B30 */
+    --ring: 233 66% 74%;            /* #8F9AE8 */
+
+    --radius: 0.5rem;
+    color-scheme: dark;
+  }
+
+  /* app-level tokens (not part of base shadcn set) */
+  :root {
+    --accent-hover: 231 65% 82%;    /* #B4BCEF */
+    --accent-pressed: 231 62% 65%;  /* #6E7CDC */
+    --accent-subtle: 231 27% 13%;   /* #191B2B  tint behind selected items */
+    --placeholder: 240 5% 55%;      /* #87878F */
+    --border-strong: 244 8% 24%;    /* #3A3A43 */
+    --warning: 44 73% 56%;          /* #E0B341 */
+    --success: 141 50% 62%;         /* #6FCF8E */
+    --info: 233 66% 74%;            /* #8F9AE8 = accent */
+  }
+}
+
+/* Map tokens to Tailwind v4 utilities. (Tailwind major: v4 — @theme inline.) */
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  /* app-level */
+  --color-accent-hover: hsl(var(--accent-hover));
+  --color-accent-pressed: hsl(var(--accent-pressed));
+  --color-accent-subtle: hsl(var(--accent-subtle));
+  --color-placeholder: hsl(var(--placeholder));
+  --color-border-strong: hsl(var(--border-strong));
+  --color-warning: hsl(var(--warning));
+  --color-success: hsl(var(--success));
+  --color-info: hsl(var(--info));
+
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Newsreader Variable', ui-serif, Georgia, 'Times New Roman', serif;
+
+  /* Type scale — Major Third (DESIGN §1). Leading is fixed per step. */
+  --text-display: 2.5rem;
+  --text-display--line-height: 1.1;
+  --text-h2: 1.875rem;
+  --text-h2--line-height: 1.15;
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.25;
+  --text-title: 1.25rem;
+  --text-title--line-height: 1.3;
+  --text-read: 1.125rem;
+  --text-read--line-height: 1.7;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.45;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.4;
+  --text-overline: 0.75rem;
+  --text-overline--line-height: 1.3;
+  --text-micro: 0.75rem;
+  --text-micro--line-height: 1.3;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Tabular figures on all numeric metadata (DESIGN §1). */
+  .tnum {
+    font-feature-settings: 'tnum' 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Single global focus replacement — never bare outline:none (BRAND §10). */
+  :where(a, button, input, [role='button'], [tabindex]):focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Reduced motion: drop transforms/shimmer, cross-fade only (DESIGN §8). */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Forced colors: map ring to system Highlight (DESIGN §11). */
+  @media (forced-colors: active) {
+    :where(a, button, input, [role='button'], [tabindex]):focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}
+
+@layer utilities {
+  /* Reading column measure — the signature element (BRAND §3, DESIGN §1). */
+  .measure-read {
+    max-width: 66ch;
+  }
+  .measure-body {
+    max-width: 72ch;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
