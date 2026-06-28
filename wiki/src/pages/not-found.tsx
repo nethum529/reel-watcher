@@ -1,14 +1,18 @@
 import { Link } from 'react-router-dom'
 import { Compass } from 'lucide-react'
-import { EmptyState } from '@/components/empty-state'
+import { Icon } from '@/components/icon'
 
 export function NotFoundPage() {
   return (
-    <div className="flex flex-col items-center gap-6">
-      <EmptyState icon={Compass} title="That page isn't here." hint="The link may be out of date." />
+    <div className="flex flex-col items-center gap-4 px-4 py-16 text-center">
+      <Icon icon={Compass} size={32} className="text-muted-foreground" />
+      <h1 className="font-serif text-h2 font-medium tracking-[-0.015em] text-foreground">
+        That page isn't here.
+      </h1>
+      <p className="font-sans text-caption text-muted-foreground">The link may be out of date.</p>
       <Link
         to="/"
-        className="font-sans text-label font-medium text-primary underline-offset-4 hover:underline"
+        className="mt-2 font-sans text-label font-medium text-primary underline-offset-4 hover:underline"
       >
         Back to home
       </Link>

@@ -10,20 +10,23 @@ interface PostRowProps {
   post: Post
   // Optional matched-term snippet (search results); rendered below the meta.
   snippet?: ReactNode
+  // Heading level so the page outline stays gap-free: h3 when the list sits under
+  // a section eyebrow (Home/Recent), h2 when posts are the section under the page h1.
+  as?: 'h2' | 'h3'
 }
 
 // The workhorse (DESIGN §6.1): a block link, serif title + sans meta, no tile.
 // Hover bg + title underline (two channels); focus ring is global.
-export function PostRow({ post, snippet }: PostRowProps) {
+export function PostRow({ post, snippet, as: Heading = 'h3' }: PostRowProps) {
   const missingTranscript = !hasTranscript(post)
   return (
     <Link
       to={`/post/${encodeURIComponent(post.id)}`}
       className="group block rounded-lg px-3 py-3 transition-colors hover:bg-accent active:bg-accent-subtle"
     >
-      <h3 className="font-serif text-title font-medium tracking-[-0.005em] text-foreground decoration-primary underline-offset-4 group-hover:underline">
+      <Heading className="font-serif text-title font-medium tracking-[-0.005em] text-foreground decoration-primary underline-offset-4 group-hover:underline">
         {postTitle(post)}
-      </h3>
+      </Heading>
       <PostMeta post={post} className="mt-1" />
       {snippet && (
         <p className="mt-1 font-sans text-caption leading-relaxed text-muted-foreground">
