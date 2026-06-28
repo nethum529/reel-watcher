@@ -3,101 +3,115 @@
 The single source of truth for how reel-watcher looks, sounds, and behaves. Every later
 UI decision must obey this file. Where this file and a component library disagree, this file wins.
 
-This is a **Japanese-luxury** redesign: gold-on-green, deep negative space (*ma*), exquisite
-type, quiet drama. Premium, never loud.
+This is a **Swiss Brutalism** redesign: the International Typographic Style (strict visible grid,
+massive grotesque type, flat ink-on-paper blocks, one accent) fused with brutalist rawness (hard
+1–2px rules, square corners, no shadows, no gradients). It is **loud, structural, and confident** —
+not soft, not luxurious, not minimal-pretty.
 
 ---
 
 ## 1. Design Thesis
 
-> **reel-watcher is a quiet gold-on-green reading room.** It stages saved short-video transcripts
-> as centered editorial pages in deep green (`#1C2814`) lit by a single gold-leaf accent
-> (`#BF8E34`) inside generous *ma* — and it refuses video-thumbnail grids as the primary layout,
-> decorative gradients/mesh/blobs/glassmorphism, more than one accent hue, drop-shadow /
-> skeuomorphic depth, and a dense top navigation bar.
+> **reel-watcher is black ink on paper, set on a visible Swiss grid that shouts in condensed
+> grotesque type and punches exactly once with a flat Orchid slab.** It refuses gradients and
+> decorative blobs; refuses rounded soft cards and drop-shadows; refuses centered-everything
+> symmetry; refuses serif / "luxury" display type; and refuses any chromatic color other than the
+> single flat Orchid accent.
 
 This sentence is falsifiable. It explicitly refuses, by name:
 
-1. **Thumbnail-grid tiles** as the primary browse layout (the source apps already do that; we read).
-2. **Decorative gradients, mesh blobs, and default glassmorphism.**
-3. **More than one accent hue** in UI chrome — gold is the *only* chromatic color.
-4. **Drop-shadow / skeuomorphic depth** — elevation is surface lightness + a 1px hairline, never a shadow.
-5. **A dense top navigation bar** — navigation lives in a quiet left rail; the content area is for content.
+1. **Gradients, mesh, glassmorphism, decorative blobs** — every fill is flat, every surface opaque.
+2. **Rounded soft cards + drop-shadows** — corners are square (radius `0`); elevation is a hard
+   1–2px rule, never a shadow or blur.
+3. **Centered-everything symmetry** — the grid is asymmetric and left-locked; the page does not
+   resolve to a single centered column with three equal cards.
+4. **Serif / luxury / expressive display type** — type is grotesque only (one heavy condensed
+   display, one condensed companion, one neutral body). No serifs anywhere.
+5. **More than one chromatic accent** — Orchid is the *only* color; everything else is jet, paper,
+   or a hue-biased neutral. Orchid appears as a flat slab/fill, never as a gradient.
 
 If you find any of these five in the build, the build violates the brand. The product's job is to
-turn ephemeral, scroll-and-forget reels into a considered, *readable, searchable* archive that
-feels like a private library, not a feed. Restraint and *ma* are the point.
+turn ephemeral, scroll-and-forget reels into a **bold, structured, searchable archive** that reads
+like a printed reference index — confident, legible, and fast to scan.
 
 ---
 
 ## 2. Selected Direction
 
-**Explicit user direction — Japanese luxury (the sakazuki minimal-editorial sensibility), executed
-dark-first on a mandated three-color base.** The two default directions do not apply; the mandate
-governs every token below.
+**Explicit user direction — Swiss Brutalism. The two default directions (sakazuki / tresmares) do
+not apply.** The mandate governs every token below. This supersedes the prior Japanese-luxury
+direction entirely; nothing from gold-on-green carries forward.
 
 Mandated, non-negotiable:
 
-- **Direction:** Japanese-luxury minimal-editorial — restraint, *ma* (negative space), refined
-  materiality, quiet drama, exquisite type. Premium, not loud.
-- **Palette base (three swatches):** `#1C2814` deep green = primary background of the whole app;
-  `#BF8E34` gold/ochre = the accent (links, focus, key emphasis, the gold-leaf moment); `#1E1415`
-  warm near-black = deepest surfaces / contrast wells / the landing. The full system is derived
-  from these three. **Dark, green-based theme is primary.**
-- **Layout:** persistent **left sidebar** navigation on the wiki routes (nav rail vs content area);
-  **content is centered**; a dramatic full-screen **landing page** with no sidebar precedes the wiki.
-- **Component system:** shadcn/ui (React + Vite + Tailwind) first; all tokens map to shadcn's
-  CSS-variable convention on `:root` so components drop in re-themed.
+- **Style:** Swiss Brutalism — International Typographic Style + brutalism. Strict visible grid,
+  MASSIVE condensed type, raw high-contrast flat blocks, hard 1–2px borders/rules, square corners
+  (radius `0`), flat fills, no shadows, no gradients. Deliberate, punchy, structural, loud.
+- **Palette base (two swatches):** Jet Black `#1D1D1D` (RGB 29,29,29) = ink / structure;
+  Orchid `#E5BDDF` (RGB 229,189,223) = the single punch accent. Neutrals + a minimal functional
+  set are derived from these two with a faint Orchid hue-bias (≈310°).
+- **Themes:** BOTH light and dark are required, with a working toggle. **Default = LIGHT** (paper).
+  Light = paper-white bg + Jet-Black ink + Orchid punch (the canonical Swiss black-on-white poster,
+  and the better surface for sustained transcript reading). Dark = Jet-Black bg + paper ink +
+  Orchid punch.
+- **Navigation:** a **bold structural top bar** (not a sidebar) — see §3 and DESIGN §6. Justified:
+  the Swiss style is built on a horizontal masthead + grid, the pages are documents (not tool
+  panels), and distinct full pages read better under a top bar than a persistent app rail.
+- **Component system:** shadcn/ui shape (React + Vite + Tailwind) first; all tokens map to shadcn's
+  CSS-variable convention on `:root` (light) and `.dark` (dark) so components drop in re-skinned.
+  *(Runtime note: this repo ships a dependency-light hand-rolled `cva()` implementation of the
+  shadcn primitives — the token contract and visual result are identical; see `component-index.md`.)*
 - **Icons:** Lucide exclusively.
 
-The three selection questions, answered for completeness (the mandate still governs):
+The three selection questions, answered for completeness (the explicit mandate still governs):
 
 | # | Question | Answer for reel-watcher |
 |---|----------|-------------------------|
-| 1 | Restraint-as-signal? | **Yes** — quiet confidence; the design recedes so the words read. |
+| 1 | Restraint-as-signal? | **No** — the brief is explicitly "loud and structural." We shout, with discipline. |
 | 2 | Trust-as-primary-job? | No — single-user personal archive; no institution to vouch for. |
-| 3 | Editorial vs functional? | **Editorial** — reading and searching saved transcripts *is* the product. |
+| 3 | Editorial vs functional? | **Editorial-leaning** — reading and scanning saved transcripts is the product, but presented as a bold reference index, not quiet *ma*. |
 
-Two of three resolve to the minimal-editorial (sakazuki) posture, which is exactly the
-Japanese-luxury sensibility the user mandated — restraint as signal, content as the product. We
-execute it dark-first on the mandated gold/green/warm-black base rather than a default font/palette.
+Neither default fits: sakazuki demands restraint-as-signal (the brief demands the opposite);
+tresmares demands trust-first institutional calm. Swiss Brutalism is the user-mandated custom path —
+loud editorial structure — so we take it directly and document it below.
 
 ---
 
 ## 3. Signature Element
 
-**The gold-leaf masthead in a field of *ma*.**
+**The left-locked grid-rule masthead with a single Orchid slab.**
 
-One typographic moment at extreme scale — a centered display heading set in Fraunces, surrounded
-by deliberate emptiness, anchored by a **single thin gold hairline** (the "gold-leaf" rule). On the
-landing it fills the viewport (gold-and-off-white on warm-black). On every wiki page it returns,
-subordinated, as the page masthead: a centered Fraunces title with the same gold hairline beneath
-it. This is the one load-bearing move — it is what makes a folder of scraped `.txt` files feel like
-a *bound, edited collection*. It is the **dominant element at ≥2× the visual weight** of anything
-near it on its page.
+Every page opens with one load-bearing move: a **full-width 2px jet rule**, beneath it a **massive
+Anton headline set hard to the left margin of the grid** (never centered), and a **single flat
+Orchid slab** — a solid Orchid rectangle with jet-black text carrying the page's key datum (the
+count: "47 TRANSCRIPTS", "TOPIC / cooking", "@creator"). The headline is the dominant element at
+**≥2× the visual weight** of anything near it; the Orchid slab is the one punch of color on the page.
 
-It is supported by one product-wide principle — the **serif-content / sans-chrome duality**:
+This is what turns a folder of scraped `.txt` files into a *designed reference publication*. Remove
+it and you have a generic table. It is load-bearing precisely because it would NOT work as generic
+style on three unrelated products — it depends on this app's structure (every view is "a labelled
+set with a count"), which the slab encodes literally.
 
-- **Display serif (Fraunces)** — the gold-leaf masthead only: landing hero, page mastheads. Never
-  below 40px, never body, never in chrome.
-- **Reading serif (Newsreader)** — content the user came to read: transcript body, post/topic/
-  creator titles in lists, pull quotes.
-- **Sans (Inter)** — everything that is interface: sidebar, search, badges, buttons, metadata,
-  labels, breadcrumbs.
+It is supported by one product-wide principle — the **type triad**, strictly partitioned:
 
-Swap the serif for the sans and the product reads as a file browser — proof the choice carries
-meaning, not decoration.
+- **Anton (heavy condensed display)** — the masthead headline, the landing hero, oversized index
+  numerals. Uppercase. Never body, never below 28px.
+- **Oswald (condensed companion)** — section headers, post titles in lists, nav labels, eyebrows.
+  The structural "poster condensed" voice.
+- **Inter (neutral grotesque)** — body, transcript reading text, metadata, captions, all small UI.
 
-### Do-not-compete list (nothing may out-weight the masthead / reading column on its page)
+### Do-not-compete list (nothing may out-weight the masthead headline / Orchid slab on its page)
 
-- No second display moment on a page — one masthead, one hairline. The gold-leaf rule appears
-  **once** per masthead, never as a repeated divider between every row.
-- No card chrome, border, or box drawn around the post-detail reading column.
-- No accent-colored fills inside the reading column (inline gold links only).
-- No related-posts rail, sticky promo, or sidebar widget competing abreast of the reading column on
-  desktop; secondary content (slides, metadata, source link) sits *below*, never alongside at equal weight.
-- Slide-OCR and thumbnails render at subordinate scale and muted treatment — never a full-width hero.
-- No gradient, blob, glass, drop-shadow, or second accent hue anywhere on the page.
+- **One Orchid slab per page.** Orchid as a solid fill appears exactly once per view (the masthead
+  datum). It is never a second card fill, never a row background, never a section band.
+- **Orchid is never text on a light surface** (fails contrast — see §10). Light-mode accent *text*
+  uses Orchid-Deep; the bright Orchid is fill-only there.
+- **One Anton headline per page.** Anton never repeats as a row title or a divider; subordinate
+  titles are Oswald.
+- No second chromatic color anywhere. No gradient, blob, glass, drop-shadow, or rounded card.
+- No centered hero + three-equal-card layout. The dominant element is left-locked and asymmetric.
+- Thumbnails / slide images render at subordinate scale inside hard-bordered boxes — never a
+  full-bleed hero, never tinted Orchid.
 
 ---
 
@@ -105,240 +119,270 @@ meaning, not decoration.
 
 ### 4-step OKLCH derivation trace
 
-**Step 1 — Base hue.** Two anchors, both user-mandated:
-- Background green `#1C2814` ≈ **OKLCH(0.27, 0.045, 130°)** — a deep, low-chroma forest green. Hue
-  130° is the spine of the whole neutral system; every surface borrows it.
-- Accent gold `#BF8E34` ≈ **OKLCH(0.66, 0.115, 82°)** — a muted ochre/gold-leaf, not a saturated amber.
+**Step 1 — Base hues (both user-mandated).**
+- Ink: Jet Black `#1D1D1D` ≈ **OKLCH(0.26, 0.00, —)** — a near-neutral very dark gray (mandated
+  exactly; kept neutral as the ink/structure color).
+- Accent: Orchid `#E5BDDF` ≈ **OKLCH(0.83, 0.055, 332°)** — a light, low-chroma magenta-pink. Its
+  hue (≈310° HSL / ≈332° OKLCH, the magenta family) is the spine the neutrals borrow from.
 
-**Step 2 — Hue-biased neutrals.** The whole surface ramp is built on the green hue (≈130° OKLCH /
-≈90° HSL) at low chroma — it is never raw Tailwind `gray`/`slate`. Surfaces step up in lightness
-from the background green; the warm near-black `#1E1415` (354° HSL, a *warm* hue) is reserved for
-the deepest wells — the sidebar rail and the landing — so the nav reads as a distinct material
-against the green content well. Text neutrals are warm parchment off-whites (≈40–75° HSL) for the
-gold-leaf warmth. Lightness steps below.
+**Step 2 — Hue-biased neutrals.** The whole neutral ramp injects ≈2–5% of the Orchid magenta hue
+(≈310–315° HSL) at very low chroma — it is never raw Tailwind `gray`/`slate`. Paper-white carries a
+faint magenta tint (`#F6F2F5`); the dark surfaces carry the same faint magenta in their grays
+(`#242124`, `#2E2A2E`). Jet ink stays neutral (mandated). Lightness steps are listed in §4 ramps.
 
-**Step 3 — Accent.** Gold `#BF8E34` (OKLCH L≈0.66, C≈0.115). Because the app is dark-first, gold is
-already in a high-contrast form against the dark greens, so no inversion is needed. A hover step
-brightens to `#D6A84E` (L≈0.72); a pressed step deepens to `#9E7328` (L≈0.50). The brighter hover
-step doubles as the **gold-text-on-lighter-surfaces** step (see §10 — base gold fails AA on the
-lightest overlay green).
+**Step 3 — Derive the accent for both themes and the text-safe variant.** Orchid `#E5BDDF` has a
+high luminance (Y≈0.58), so:
+- As a **fill** it pairs with jet-black text/icons at ~10.2:1 on any background — use it as the
+  Orchid slab and as primary-button fill in **both** themes.
+- As **text**, Orchid is legible only on dark surfaces (10.2:1 on jet) — so in **dark mode** Orchid
+  is the link/accent-text color. In **light mode** Orchid as text on paper is only 1.5:1 (fails), so
+  light-mode accent *text* uses **Orchid-Deep `#8E2F86`** (≈OKLCH 0.45, C 0.16, 305° HSL — a
+  darkened, more-saturated orchid that hits 6.5:1 on paper). Hover/pressed steps in the ramp.
 
-**Step 4 — Measure all pairs.** See §10 contrast table.
+**Step 4 — Measure all pairs.** See §10 contrast table (both themes verified).
 
 ### ΔE vs the slop accent family
 
-| Compared to | Slop hex | reel-watcher gold | Approx ΔE2000 | Verdict |
-|-------------|----------|-------------------|---------------|---------|
-| Tailwind amber | `#F59E0B` | `#BF8E34` | ≈ 14 | Clears ≥10 (darker L 0.78→0.66, lower C, browner) |
-| Tailwind yellow | `#EAB308` | `#BF8E34` | ≈ 15 | Clears ≥10 |
-| Tailwind orange | `#F97316` | `#BF8E34` | ≈ 22 | Clears ≥10 |
+| Compared to | Slop hex | reel-watcher Orchid | Approx ΔE2000 | Verdict |
+|-------------|----------|---------------------|---------------|---------|
+| Tailwind pink | `#EC4899` | `#E5BDDF` (Orchid) | ≈ 28 | Clears ≥10 (far lighter L0.58 vs 0.65, far lower chroma) |
+| Tailwind violet | `#8B5CF6` | `#E5BDDF` (Orchid) | ≈ 33 | Clears ≥10 (magenta vs blue-violet, lighter) |
+| Tailwind pink | `#EC4899` | `#8E2F86` (Orchid-Deep) | ≈ 22 | Clears ≥10 (darker, hue 305 vs ~350) |
+| Tailwind violet | `#8B5CF6` | `#8E2F86` (Orchid-Deep) | ≈ 24 | Clears ≥10 |
 
-The gold is a desaturated, dark *ochre* (gold-leaf), materially deeper and less chromatic than the
-bright Tailwind amber/yellow — it clears the ≥10 bar on its own, and is user-mandated regardless.
+Orchid is a soft, light magenta-pink and Orchid-Deep is a dark plum-magenta; both are materially
+distinct from the saturated mid-tone Tailwind pink/violet. They clear the ≥10 bar on their own, and
+are user-mandated regardless.
 
-### Surface ramp (dark-first, green-based)
-
-Hue ≈90° HSL (green), except the warm-black wells. All values are exact hex with shadcn HSL.
+### Light theme ramp (DEFAULT — paper)
 
 | Token / step | Hex | HSL (shadcn) | Role |
 |--------------|-----|--------------|------|
-| green-well | `#151E0F` | `96 33% 9%` | deepest green well (active reading background, footer) |
-| **background** | **`#1C2814`** | **`96 33% 12%`** | `--background` — the content area (primary, mandated) |
-| sidebar-bg | `#1E1415` | `354 20% 10%` | `--sidebar-background` — nav rail (warm near-black, mandated) |
-| card | `#243017` | `89 35% 14%` | `--card` — raised content surface (topic/creator tiles, input fill) |
-| popover | `#2A3A1C` | `92 35% 17%` | `--popover` — overlays, command palette (floats above scrim) |
-| muted / secondary | `#313F22` | `89 30% 19%` | `--muted` / `--secondary` — recessed fills, badge base |
-| accent-surface | `#3A4A29` | `89 29% 23%` | `--accent` (shadcn hover-surface), hovered/selected row base |
-| border | `#3F4D2E` | `87 25% 24%` | `--border` — default hairlines, sidebar/content seam |
-| border-strong | `#51603D` | `86 22% 31%` | `--input` focused-idle edge, strong dividers |
+| **background** | **`#F6F2F5`** | **`315 18% 96%`** | `--background` — paper (faint magenta tint) |
+| card / popover | `#FFFFFF` | `0 0% 100%` | `--card` / `--popover` — raised surfaces (separated by a hard border, not lightness) |
+| muted / secondary | `#EBE3E9` | `315 17% 91%` | `--muted` / `--secondary` — recessed fills, badge base |
+| accent-surface | `#EBE3E9` | `315 17% 91%` | `--accent` (shadcn hover-surface — NOT the brand accent) |
+| border (hard) | `#1D1D1D` | `0 0% 11%` | `--border` / `--input` — the brutalist hard rule (jet, on every card/input/section) |
+| border-muted | `#D8CFD6` | `313 12% 83%` | rare subtle divider inside dense lists only (decorative, not structural) |
+| **foreground** | **`#1D1D1D`** | **`0 0% 11%`** | `--foreground` — ink: body, headings, transcript |
+| muted-foreground | `#5E575C` | `317 4% 35%` | `--muted-foreground` — secondary text, metadata |
+| placeholder | `#6E666C` | `315 4% 42%` | input placeholders/hints (≥4.5:1 on white card) |
 
-### Text neutrals (warm parchment)
+### Dark theme ramp (jet)
 
-| Token | Hex | HSL | Role |
-|-------|-----|-----|------|
-| foreground | `#F2EDE3` | `40 37% 92%` | `--foreground` — body, headings, transcript |
-| muted-foreground | `#ADB0A0` | `71 9% 66%` | `--muted-foreground` — secondary text, metadata |
-| placeholder | `#8C9080` | `75 7% 53%` | input placeholders, hints (still ≥4.5:1 on field fill) |
+| Token / step | Hex | HSL (shadcn) | Role |
+|--------------|-----|--------------|------|
+| **background** | **`#1D1D1D`** | **`0 0% 11%`** | `--background` — jet |
+| card / popover | `#242124` | `300 4% 14%` | `--card` / `--popover` — raised surfaces (one step up; separated by border) |
+| muted / secondary | `#2E2A2E` | `300 5% 17%` | `--muted` / `--secondary` — recessed fills, badge base |
+| accent-surface | `#2E2A2E` | `300 5% 17%` | `--accent` (shadcn hover-surface — NOT the brand accent) |
+| border (hard) | `#8C868C` | `300 3% 54%` | `--border` / `--input` — hard rule (4.7:1, visible/structural) |
+| border-muted | `#3A353A` | `300 5% 22%` | subtle divider inside dense lists only (decorative, not structural) |
+| **foreground** | **`#F6F2F5`** | **`315 18% 96%`** | `--foreground` — paper ink |
+| muted-foreground | `#A8A0A6` | `315 4% 64%` | `--muted-foreground` — secondary text, metadata |
+| placeholder | `#948C92` | `315 4% 56%` | input placeholders/hints (≥4.5:1 on `--card`) |
 
-### Gold accent ramp — gold-leaf, hue ≈39° HSL
+### Orchid accent ramp (the one chromatic color)
 
-| Step | Hex | HSL | Role |
-|------|-----|-----|------|
-| gold-hover | `#D6A84E` | `40 62% 57%` | link hover; **gold text on lighter surfaces** (popover) |
-| **gold (base)** | **`#BF8E34`** | **`39 57% 48%`** | `--primary`, `--ring`, links, active nav, gold-leaf rule, key emphasis |
-| gold-pressed | `#9E7328` | `38 60% 39%` | `:active` / pressed link & control state |
-| gold-subtle | `#2E2A14` | `51 39% 13%` | tint behind selected nav item / active result (the "gold-leaf glow") |
-| gold-foreground | `#1E1415` | `354 20% 10%` | dark text/icon *on* a filled gold surface |
+| Step | Hex | HSL | Light-mode role | Dark-mode role |
+|------|-----|-----|-----------------|----------------|
+| **Orchid (base)** | **`#E5BDDF`** | **`309 43% 82%`** | `--primary` FILL (Orchid slab, primary button) — jet text on top | `--primary` FILL **and** link/accent TEXT + `--ring` |
+| Orchid-hover | `#DBAED3` | `311 38% 77%` | primary-fill hover | — |
+| Orchid-pressed | `#C994BF` | `311 33% 68%` | primary-fill pressed | accent-text pressed |
+| Orchid-Deep | `#8E2F86` | `305 50% 37%` | link/accent **TEXT** + `--ring` (focus) | — (unused; dark uses base Orchid) |
+| Orchid-Deep-hover | `#7A2873` | `305 50% 32%` | link hover (light) | — |
 
-> **One-hue rule.** `#BF8E34` and its steps are the *only* chromatic color in UI chrome. Semantic
-> status colors (§5) are functional signals, never decorative, and never appear as brand chrome.
+> **One-color rule.** Orchid and its steps are the *only* chromatic color in UI chrome. Semantic
+> status colors (§5) are functional signals, never decoration, and never appear as brand chrome.
+> The critical contrast split (Orchid = fill-only on light, text-ok on dark) is enforced in §10.
+
+`--primary-foreground` (text/icon on an Orchid fill) = **Jet Black `#1D1D1D`** in both themes (10.2:1).
 
 ---
 
 ## 5. Semantic Colors
 
 Functional only. Each pairs with a **fixed Lucide icon** (color is never the only channel — Tier 1
-rule #4) and is hue-separated from the gold accent (≈39° HSL) to avoid collision.
+rule #4) and is hue-separated from Orchid (≈305–315°) to avoid collision. The system carries **only
+two chromatic semantics — error and success** — plus a **neutral notice** (uses `--muted-foreground`
++ an icon, no color). The app's real status moments: scrape failed → error; missing transcript →
+neutral notice; copied → success. Each theme has its own value (a single hue can't clear 4.5:1 on
+both jet and paper).
 
-To keep the one-hue discipline (and because an amber "warning" would collide with the gold accent),
-the system carries **only two chromatic semantics — error and success** — plus a **neutral notice**
-that uses `--muted-foreground` + an icon and no color at all. The app's real status moments map
-cleanly: scrape failed → error; nothing copied/missing transcript → neutral notice; copied → success.
+| Role | Light hex (on paper) | Dark hex (on jet) | Fixed Lucide icon | Accent-collision |
+|------|----------------------|-------------------|-------------------|------------------|
+| Destructive / error | `#B3261E` (`3 71% 41%`, 5.9:1) | `#F2998F` (`6 79% 75%`, 7.8:1) | `octagon-alert` | H≈3–6° vs 305° — clear |
+| Success | `#1B6E37` (`140 61% 27%`, 5.7:1) | `#84C98F` (`130 39% 65%`, 8.6:1) | `circle-check` | H≈130–140° — clear |
+| Notice (neutral) | `--muted-foreground` | `--muted-foreground` | `info` | no chroma — cannot collide |
 
-| Role | Hex | HSL | On `#1C2814` | Fixed Lucide icon | Accent-collision |
-|------|-----|-----|--------------|-------------------|------------------|
-| Destructive / error | `#E2897F` | `6 65% 72%` | 5.96:1 ✓ | `octagon-alert` | H≈6° vs 39° — clear |
-| Success | `#8FBF8E` | `119 28% 65%` | 7.35:1 ✓ | `circle-check` | H≈119° — clear |
-| Notice (neutral) | `#ADB0A0` | `71 9% 66%` | 7.0:1 ✓ | `info` | no chroma — cannot collide |
-
-`--destructive` / `--destructive-foreground` are wired into the shadcn `:root` (DESIGN.md §0).
-Success and notice are app-level tokens used only for the few real status moments, never decoration.
+`--destructive` / `--destructive-foreground` (and an app `--success`) are wired into both token
+blocks (DESIGN §0). Used only for real status moments, never decoration.
 
 ---
 
 ## 6. Dark Mode
 
-Dark (green-based) is **primary and the default `:root`**, as mandated. A light theme is *not in
-scope* for v1 and the thesis does not require it — a "luxury reading room" is a dark room. If a
-light theme is ever added it must be authored as a separate parallel palette (not a CSS inversion)
-under a `.light` class. Until then, ship dark only and set `<meta name="color-scheme" content="dark">`.
+Both themes are first-class parallel palettes (not a CSS inversion — each has hand-tuned neutrals and
+its own accent-text rule). **Light is the default.**
+
+- Light = `:root`; dark = `.dark` on `<html>` (DESIGN §0 + §6 toggle).
+- The accent behavior **flips by theme** (the one rule that is not a mirror): accent *text* is
+  Orchid-Deep on light, base Orchid on dark; focus `--ring` is Orchid-Deep on light, base Orchid on
+  dark. Orchid *fill* (the slab, primary button) + jet text is identical in both.
+- `color-scheme` is set per theme (`light` / `dark`) so native controls render correctly.
+- Theme is resolved at boot: `localStorage['rw-theme']` → `prefers-color-scheme` → light. An inline
+  head script applies the class before first paint (no flash). Toggle persists to `localStorage`.
 
 ---
 
 ## 7. Typography
 
-Three families, strictly partitioned by the §3 duality. Self-hosted via `@fontsource` for
-performance (no FOIT/CLS, no third-party origin).
+Three grotesque families, strictly partitioned by the §3 triad. No serifs. Self-hosted via
+`@fontsource` (no third-party origin, no FOIT/CLS).
 
 ### Faces
 
-| Face | Family | Used for | Never used for |
-|------|--------|----------|----------------|
-| **Display serif** | **Fraunces** (variable, `opsz` axis) | Landing hero, page mastheads — the gold-leaf moment | Body, reading column, any chrome, anything < 40px |
-| **Reading serif** | **Newsreader** (variable, optical-size) | Transcript body, post/topic/creator titles in lists, pull quotes | Sidebar, buttons, badges, metadata, form labels |
-| **Sans** | **Inter** (variable) | Sidebar, search, buttons, badges, metadata, captions, labels, breadcrumbs | The transcript reading body, mastheads |
+| Face | Family | Pkg | Used for | Never used for |
+|------|--------|-----|----------|----------------|
+| **Display** | **Anton** | `@fontsource/anton` (OFL-1.1) | Masthead headline, landing hero, oversized index numerals. **Uppercase.** | Body, transcript, anything < 28px, anything not a headline |
+| **Condensed** | **Oswald** (variable, wght 200–700) | `@fontsource-variable/oswald` (OFL-1.1) | Section headers, post/topic/creator titles in lists, nav labels, eyebrows | Long reading body, transcript |
+| **Body** | **Inter** (variable) | `@fontsource-variable/inter` (already installed) | Body, transcript reading text, metadata, captions, all small UI | Masthead headline, big display |
 
-### Per-face rationale
+### Font substitution rationale (commercial → free)
 
-- **Fraunces (display):** high-contrast, optical "Old Style" serif with genuine drama at large
-  optical sizes (`opsz: 144`) — the luxury masthead voice. **Display-only**: never body, never below
-  40px, never in chrome. This is the one place expressive type is allowed.
-- **Newsreader (reading):** a lower-contrast text serif with true optical sizing — reads cleanly at
-  19px and gives spoken-word transcripts the cadence of an *edited longform article*. The Fraunces↔
-  Newsreader pairing is intentional: dramatic high-contrast display over calm low-contrast reading.
-- **Inter (sans):** disappears as chrome; tabular figures (`"tnum" 1`) align counts and dates.
+- **Druk Heavy → Anton.** The brief wants the *feel* of Druk Heavy (ultra-bold condensed display).
+  Anton is the canonical free SIL-OFL substitute: a single heavy, tightly-condensed grotesque built
+  for large display/poster use. It carries the same brick-wall density at scale. Single weight (its
+  one weight reads as black), so it is display-only by nature. Verified OFL-1.1, woff2, self-hostable.
+- **Theatre/Theater-condensed → Oswald.** The brief wants a condensed "theatre poster" companion.
+  Oswald is the most widely-trusted free condensed grotesque (a reworking of the classic Alternate
+  Gothic / news-condensed lineage that reads as theatrical poster type), available as a variable
+  font (wght 200–700) for tight weight control. Verified OFL-1.1, woff2, self-hostable.
+- **Body grotesque → Inter.** A neutral, screen-optimized grotesque in the Swiss/Helvetica lineage —
+  the workhorse for body, transcript, and UI. Already installed; variable; excellent legibility at
+  17–18px with tabular figures (`"tnum" 1`) for counts/dates.
+
+> The prior serif faces (Fraunces, Newsreader) are **removed** — Swiss Brutalism is sans-only. The
+> implementer should drop `@fontsource-variable/fraunces` + `@fontsource-variable/newsreader` and add
+> `@fontsource/anton` + `@fontsource-variable/oswald`.
 
 ### Weight → role map (max discipline)
 
-| Weight | Fraunces | Newsreader | Inter |
-|--------|----------|-----------|-------|
-| 300 Light | landing hero (large optical) | — | — |
-| 400 Regular | page mastheads | transcript body, pull quotes (italic 400) | metadata, captions, body chrome |
-| 500 Medium | — | post / topic / creator titles | sidebar items, badges, input text, active labels |
-| 600 SemiBold | — | — | buttons, overlines, emphasized labels |
+| Weight | Anton | Oswald | Inter |
+|--------|-------|--------|-------|
+| 400 | hero, masthead headline, index numerals (its only weight) | metadata-scale labels (rare) | body, transcript, captions, metadata |
+| 500 | — | post/topic/creator titles, nav labels, eyebrows | UI labels, input text, active labels |
+| 600 | — | section headers (h3) | buttons, emphasized labels |
+| 700 | — | major section headers (h2) | reserved: inline error text only |
 
-No weight outside {300, 400, 500, 600}; 300 is Fraunces-display only. No bold 700 except
-`--destructive` inline error text. Reading serif stays ≤500 — content weight contrast comes from
-*size*, not heft.
+No weight outside {400, 500, 600, 700}. Anton is 400-only. Reading-text weight contrast comes from
+*size and case*, not extra heft.
 
 ### Tracking & leading (canonical; do not improvise)
 
-- Fraunces hero/masthead: tracking **-0.02em**, line-height **1.0–1.1**.
-- Newsreader titles: **-0.01em**; reading body 18–19px: **0**, line-height **1.75**.
-- Inter UI: **-0.011em** at 16px, **0** at ≤14px.
-- **Uppercase overlines (signature luxury move): +0.18em**, line-height 1.3 — wide-tracked eyebrows
-  are part of the Japanese-luxury voice and appear above mastheads ("ARCHIVE", "TOPIC").
+- Anton hero/masthead (uppercase): tracking **-0.01em**, line-height **0.9–0.95**.
+- Oswald section headers (uppercase): **+0.01em**, line-height **1.05–1.15**.
+- Oswald titles (mixed case): **0**, line-height **1.15**.
+- Inter body 17px: **-0.011em**, line-height **1.6**; transcript 18px: **0**, line-height **1.7**.
+- Inter ≤14px UI: **0**.
+- **Uppercase eyebrows/overlines (Inter 600 or Oswald 500): +0.12em**, line-height 1.3 — the wide
+  tracked label that sits above mastheads ("ARCHIVE", "TOPIC", "CREATOR").
 
 ---
 
 ## 8. Voice Fingerprint
 
-The app is read by one person (its owner); the content is the creators' words, not ours. Our copy
-is the thin chrome around it: labels, empty states, counts. Quiet and exact, like a museum caption.
+The app is read by one person (its owner); the content is the creators' words, not ours. Our copy is
+the thin chrome around it: labels, empty states, counts. Brutalist voice = blunt, declarative,
+upper-case where structural; never marketing.
 
 ```
-Always: name the real object ("12 posts", "transcript", "from @creator") ·
+Always: name the real object ("12 POSTS", "TRANSCRIPT", "FROM @creator") ·
         use the source's own vocabulary (Reel / Short / TikTok, never "content piece") ·
-        state counts and dates precisely (relative date + exact on hover)
+        state counts and dates precisely (relative date + exact on hover), set as plain facts
 Never:  marketing verbs or hype — no Unlock/Elevate/Empower/Supercharge/Transform/
-        Streamline/Seamlessly/Effortlessly/Curate anywhere in UI copy.
+        Streamline/Seamlessly/Effortlessly/Curate/Reimagine anywhere in UI copy.
 ```
 
-Reading level: plain, ~grade 7. Labels are nouns or noun+count ("Topics", "47 saved", "No
-transcript yet"), never slogans. The landing may carry **one** quiet, concrete line — never a tagline.
+Reading level: plain, ~grade 7. Structural labels are nouns or noun+count, often uppercase
+("TOPICS", "47 SAVED", "NO TRANSCRIPT"). The landing carries **one** quiet, concrete line — never a
+tagline.
 
 ---
 
 ## 9. Icons
 
-- **Lucide only.** No other icon set, no emoji in UI chrome (emoji inside a scraped caption are
+- **Lucide only.** No other icon set; no emoji in UI chrome (emoji inside a scraped caption are
   *content* and render as-is).
-- **Stroke-width is a brand token: `1.5`** default, matching the medium chrome weight. Use `2` only
-  for the single active/emphasis icon in a control (active sidebar item); use `1` only in dense data
-  rows where 1.5 reads heavy. Stroke tracks type weight: lighter context → thinner stroke.
+- **Stroke-width is a brand token: `2`** (brutalism is heavy — the default stroke is bold to match
+  the hard rules). Use `1.5` only inside dense data rows where 2 reads too heavy; never below 1.5.
+  Stroke tracks weight: heavier structure → thicker stroke.
 - **Color:** icons inherit `currentColor`. In chrome they are `--muted-foreground`; on hover/active
-  they take `--primary` (gold). Never multicolor.
+  they take `--foreground` (or Orchid-Deep/Orchid for the accent-text case per theme). On an Orchid
+  fill they are jet (`--primary-foreground`). Never multicolor.
 - **ARIA:** decorative icons get `aria-hidden="true"`; an icon that *is* the only label (icon-only
-  button) gets an `aria-label` and a ≥44×44px hit area (Tier 1 rule #3).
+  button, e.g. the theme toggle) gets an `aria-label` and a ≥44×44px hit area (Tier 1 rule #3).
 
-Reference sizing table lives in DESIGN.md §7.
+Reference sizing table lives in DESIGN §7.
 
 ---
 
 ## 10. Accessibility Commitments
 
 WCAG **AA is the floor, never traded for aesthetics.** Verified contrast pairs — each computed
-against **the surface the element actually renders on**, not the `--background` green (a prior
-revision mis-verified the input/meta/pressed rows against `#1C2814`):
+against **the surface the element actually renders on**, for BOTH themes.
 
-| Pair | Foreground | Background (rendered-on surface) | Ratio | Pass |
+### Light theme (paper)
+
+| Pair | Foreground | Background | Ratio | Pass |
 |------|-----------|-----------|-------|------|
-| Body / headings | `#F2EDE3` | `#1C2814` `--background` | 13.2:1 | ✓ AAA |
-| Transcript serif body | `#F2EDE3` | `#1C2814` `--background` | 13.2:1 | ✓ AAA |
-| Body on sidebar | `#F2EDE3` | `#1E1415` `--sidebar` | 15.4:1 | ✓ AAA |
-| Secondary / metadata | `#ADB0A0` | `#1C2814` `--background` | 7.0:1 | ✓ AAA |
-| Placeholder on input fill | `#95998A` | `#243017` `--card` (input bg) | 4.77:1 | ✓ AA |
-| Muted text on card | `#ADB0A0` | `#243017` `--card` | 6.3:1 | ✓ AA |
-| Muted text on muted surface | `#ADB0A0` | `#313F22` `--muted` | 5.1:1 | ✓ AA |
-| Muted meta on row hover | `#ADB0A0` | `#364526` `--accent` (hover bg) | 4.66:1 | ✓ AA |
-| **Gold link / accent text** | **`#BF8E34`** | **`#1C2814` `--background`** | **5.24:1** | **✓ AA** |
-| Gold text on card | `#BF8E34` | `#243017` `--card` | 4.73:1 | ✓ AA |
-| Gold text on **popover** | `#BF8E34` | `#2A3A1C` `--popover` | 4.15:1 | ✗ — **use gold-hover here** |
-| Gold-hover text on popover | `#D6A84E` | `#2A3A1C` `--popover` | 5.56:1 | ✓ AA |
-| Gold text on sidebar | `#BF8E34` | `#1E1415` `--sidebar` | 6.12:1 | ✓ AA |
-| Pressed link text on gold-subtle | `#C08B30` | `#2E2A14` `--gold-subtle` (active bg) | 4.79:1 | ✓ AA — + underline |
-| Button label on gold | `#1E1415` | `#BF8E34` `--primary` (resting fill) | 6.12:1 | ✓ AA |
-| Button label on pressed gold | `#1E1415` | `#A7792A` `--gold-pressed` (pressed fill) | 4.64:1 | ✓ AA |
-| Focus ring | `#BF8E34` | `#1C2814` | 5.24:1 | ✓ (≥3:1 UI) |
-| Focus ring on sidebar | `#BF8E34` | `#1E1415` | 6.12:1 | ✓ (≥3:1 UI) |
-| Gold-leaf hairline vs bg | `#BF8E34` | `#1C2814` | 5.24:1 | ✓ (≥3:1 UI element) |
-| Error text | `#E2897F` | `#1C2814` | 5.96:1 | ✓ AA |
-| Success text | `#8FBF8E` | `#1C2814` | 7.35:1 | ✓ AAA |
+| Body / headings / transcript | `#1D1D1D` | `#F6F2F5` `--background` | 15.2:1 | ✓ AAA |
+| Secondary / metadata | `#5E575C` | `#F6F2F5` `--background` | 6.3:1 | ✓ AA |
+| Placeholder | `#6E666C` | `#FFFFFF` `--card` (input fill) | 5.5:1 | ✓ AA |
+| **Accent link / text** | **`#8E2F86` Orchid-Deep** | `#F6F2F5` `--background` | 6.5:1 | ✓ AA |
+| Accent text on card | `#8E2F86` | `#FFFFFF` `--card` | 7.2:1 | ✓ AA |
+| **Orchid as TEXT on paper** | `#E5BDDF` | `#F6F2F5` | **1.5:1** | ✗ — **forbidden as text on light; fill-only** |
+| Slab / button label on Orchid | `#1D1D1D` | `#E5BDDF` `--primary` | 10.2:1 | ✓ AAA |
+| Focus ring | `#8E2F86` | `#F6F2F5` | 6.5:1 | ✓ (≥3 UI) |
+| Hard border / rule (UI) | `#1D1D1D` | `#F6F2F5` | 15.2:1 | ✓ (≥3 UI) |
+| Error text | `#B3261E` | `#F6F2F5` | 5.9:1 | ✓ AA |
+| Success text | `#1B6E37` | `#F6F2F5` | 5.7:1 | ✓ AA |
 
-**Critical gold rule (do not violate):** base gold `#BF8E34` as *text* is only legible on surfaces
-at or darker than `--card` (background, card, sidebar, gold-subtle). On the lighter `--popover`
-green (command palette, dropdowns) gold text **must** use the brighter `gold-hover #D6A84E`. The
-implementer enforces this with a `.on-popover` modifier (DESIGN.md §0). Base gold is always fine as
-a *fill*, a *hairline*, or a *focus ring* (UI-element 3:1) on any surface.
+### Dark theme (jet)
 
-**Pressed-gold caveat:** the pressed link state has two distinct tokens because the same gold can't
-serve as both text and fill. As *text* it rides on the dark `--gold-subtle` tint, so it uses the
-lighter `--gold-pressed-text` `#C08B30` (4.79:1 on `#2E2A14`, 5.12:1 on `#1C2814`); the deeper
-`--gold-pressed` `#A7792A` is reserved as the button's pressed *fill* (dark label on top, 4.64:1 — AA
-as normal text, while still a touch deeper than the resting gold so the press still reads). Even though
-the pressed text now clears 4.5:1 on its own, it still always carries an underline (two-channel) — it
-is never communicated by color alone.
+| Pair | Foreground | Background | Ratio | Pass |
+|------|-----------|-----------|-------|------|
+| Body / headings / transcript | `#F6F2F5` | `#1D1D1D` `--background` | 15.2:1 | ✓ AAA |
+| Secondary / metadata | `#A8A0A6` | `#1D1D1D` `--background` | 6.6:1 | ✓ AA |
+| Placeholder | `#948C92` | `#242124` `--card` (input fill) | 4.8:1 | ✓ AA |
+| **Accent link / text (Orchid)** | **`#E5BDDF`** | `#1D1D1D` `--background` | 10.2:1 | ✓ AAA |
+| Accent text on card | `#E5BDDF` | `#242124` `--card` | 9.5:1 | ✓ AAA |
+| Slab / button label on Orchid | `#1D1D1D` | `#E5BDDF` `--primary` | 10.2:1 | ✓ AAA |
+| Focus ring (Orchid) | `#E5BDDF` | `#1D1D1D` | 10.2:1 | ✓ (≥3 UI) |
+| Hard border / rule (UI) | `#8C868C` | `#1D1D1D` | 4.7:1 | ✓ (≥3 UI) |
+| Error text | `#F2998F` | `#1D1D1D` | 7.8:1 | ✓ AA |
+| Success text | `#84C98F` | `#1D1D1D` | 8.6:1 | ✓ AAA |
+
+**Critical Orchid rule (do not violate):**
+- **Orchid `#E5BDDF` as TEXT is forbidden on light surfaces** (1.5:1). Light-mode accent *text* and
+  links use **Orchid-Deep `#8E2F86`**; the focus ring on light uses Orchid-Deep too.
+- **Orchid as a FILL** (the slab, primary button) with a **jet-black label/icon** is fine on any
+  surface in either theme (10.2:1).
+- In **dark mode**, Orchid is fine as text (10.2:1) and as fill, and is the focus ring.
+- `border-muted` (the subtle divider) is <3:1 and is **decorative only** — real structure and all
+  load-bearing separators use `--border` (the hard rule, ≥3:1 in both themes) plus spacing.
 
 Commitments:
 
-- **Focus token:** `--ring` (`#BF8E34`), 2px ring + 2px offset on every focusable element via
-  `:focus-visible`. Never `outline: none` without this replacement.
+- **Focus token:** `--ring` (Orchid-Deep on light / Orchid on dark), **2px ring + 2px offset** on
+  every focusable element via `:focus-visible`. Never `outline: none` without this replacement.
 - **Hit areas:** ≥44×44px for all interactive targets; icon-only buttons `min-h-11 min-w-11`.
-- **Two-channel states:** every color-coded state also carries an icon, label, border, or underline.
-- **Forced colors:** under `forced-colors: active` drop custom colors and rely on system
-  `ButtonText`/`Canvas`/`Highlight`; focus ring maps to system `Highlight` (DESIGN.md §11).
-- **Reduced motion:** `prefers-reduced-motion: reduce` removes all transforms; cross-fade only,
-  including the landing entrance (DESIGN.md §8 / §12).
+- **Two-channel states:** every color-coded state also carries an icon, border, underline, or label.
+- **Forced colors:** under `forced-colors: active` drop custom colors; rely on system
+  `ButtonText`/`Canvas`/`Highlight`; focus ring and active-nav indicator map to `Highlight`; hard
+  rules fall to `CanvasText` (DESIGN §11).
+- **Reduced motion:** `prefers-reduced-motion: reduce` removes all transforms; instant or cross-fade
+  fallback only (DESIGN §8).
 
 ---
 
@@ -347,11 +391,13 @@ Commitments:
 - **v1 scope: Latin script (LGC), left-to-right**, primarily English UI chrome. Scraped transcript
   content may contain any Unicode (emoji, hashtags, non-Latin captions); the reading column must
   render arbitrary UTF-8 without breaking.
-- This scope gates two choices in DESIGN.md: tracking values (incl. the +0.18em overlines and
-  negative display tracking) are tuned for Latin — do **not** apply negative tracking to CJK if scope
-  widens; and line-height 1.75 on the reading serif assumes Latin ascender/descender metrics.
+- This scope gates DESIGN choices: tracking values (the +0.12em eyebrows, -0.01em display) are tuned
+  for Latin — do **not** apply negative/uppercase tracking to CJK if scope widens; the transcript
+  line-height 1.7 assumes Latin metrics. **Anton has no lowercase nuance for non-Latin and is
+  uppercase-Latin display only** — non-Latin headings fall back to the Inter/system stack.
 - No RTL mirroring in v1. If added later, use logical properties (`margin-inline`, `padding-inline`,
-  `text-align: start`/`end`) — already the default in DESIGN.md so the path is open. Note: the
-  sidebar is `inset-inline-start`, so it mirrors correctly under RTL without rework.
-- Fraunces + Newsreader + Inter cover Latin-1/Latin-Extended; non-Latin transcript glyphs fall back
-  to the system UI stack via the `font-family` fallback chain (DESIGN.md §11).
+  `text-align: start`/`end`) — the default in DESIGN so the path is open.
+- Fallback chains (DESIGN §12): Anton/Oswald/Inter cover Latin-1/Latin-Extended; non-Latin glyphs
+  fall back to the system UI stack via the `font-family` fallback chain.
+</content>
+</invoke>

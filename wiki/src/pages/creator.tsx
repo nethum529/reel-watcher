@@ -1,57 +1,58 @@
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { SearchX } from 'lucide-react'
+import { Inbox } from 'lucide-react'
 import { usePosts } from '@/data/store'
-import { Breadcrumb } from '@/components/breadcrumb'
+import type { Post } from '@/data/types'
 import { Masthead } from '@/components/masthead'
+import { Breadcrumb } from '@/components/breadcrumb'
 import { PostRow } from '@/components/post-row'
 import { EmptyState } from '@/components/empty-state'
 import { LoadBoundary } from '@/components/load-boundary'
 
+// Single creator (#/creator/:creator): breadcrumb back to the index → signature
+// masthead (@handle + post-count slab) → that creator's posts as dense rows,
+// newest first (DESIGN §4 "Creator · post list"). Empty state when the handle has
+// no posts. Rows sit directly under the page h1, so PostRow renders an h2 (the
+// heading outline stays gap-free).
 function CreatorBody({ creator }: { creator: string }) {
   const posts = usePosts()
-  const matches = useMemo(
+  const mine = useMemo<Post[]>(
     () =>
       posts
         .filter((p) => p.creator === creator)
         .sort((a, b) => b.fetched_at - a.fetched_at),
     [posts, creator],
   )
-  const source = matches[0]?.source
-
   return (
-    <div className="mx-auto w-full max-w-[760px]">
-      <Masthead
-        overline="Creator"
-        title={`@${creator}`}
-        subline={`${source ? `${source} · ` : ''}${matches.length} ${
-          matches.length === 1 ? 'post' : 'posts'
-        }`}
+    <>
+      <Breadcrumb
+        items={[{ label: 'Creators', to: '/creators' }, { label: `@${creator}` }]}
       />
-      <div className="mt-6 flex justify-center">
-        <Breadcrumb
-          items={[
-            { label: 'Wiki', to: '/wiki' },
-            { label: 'Creators', to: '/wiki#creators' },
-            { label: `@${creator}` },
-          ]}
+      <div className="mt-4">
+        <Masthead
+          overline="Creator"
+          title={`@${creator}`}
+          slab={`${mine.length} ${mine.length === 1 ? 'post' : 'posts'}`}
         />
       </div>
-
-      <div className="mt-16 md:mt-24">
-        {matches.length > 0 ? (
+      <div className="mt-8 md:mt-12">
+        {mine.length > 0 ? (
           <ul className="flex flex-col">
-            {matches.map((post) => (
+            {mine.map((post) => (
               <li key={post.id}>
                 <PostRow post={post} as="h2" />
               </li>
             ))}
           </ul>
         ) : (
-          <EmptyState icon={SearchX} title={`Nothing saved from @${creator}`} />
+          <EmptyState
+            icon={Inbox}
+            title={`No posts from @${creator}`}
+            hint="This creator isn't in the archive yet."
+          />
         )}
       </div>
-    </div>
+    </>
   )
 }
 

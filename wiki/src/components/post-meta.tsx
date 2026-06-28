@@ -19,7 +19,7 @@ export function PostMeta({ post, linkCreator = false, className }: PostMetaProps
   const creator = linkCreator ? (
     <Link
       to={`/creator/${encodeURIComponent(post.creator)}`}
-      className="text-muted-foreground underline-offset-2 hover:text-primary hover:underline"
+      className="text-muted-foreground underline-offset-2 hover:text-accent-ink hover:underline"
     >
       {creatorText}
     </Link>

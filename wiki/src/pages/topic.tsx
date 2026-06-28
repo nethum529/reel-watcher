@@ -1,54 +1,61 @@
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { SearchX } from 'lucide-react'
+import { Inbox } from 'lucide-react'
 import { usePosts } from '@/data/store'
-import { Breadcrumb } from '@/components/breadcrumb'
 import { Masthead } from '@/components/masthead'
+import { Breadcrumb } from '@/components/breadcrumb'
 import { PostRow } from '@/components/post-row'
 import { EmptyState } from '@/components/empty-state'
 import { LoadBoundary } from '@/components/load-boundary'
 
+// A single topic (#/topic/:tag): the signature masthead (TOPIC eyebrow → the tag
+// as the Anton headline beside a single Orchid count slab → 2px rule), a
+// breadcrumb back to the Topics index, then the dense list of posts carrying this
+// tag (newest first — DESIGN §4 "dense"). Empty state when the tag has no posts.
 function TopicBody({ tag }: { tag: string }) {
   const posts = usePosts()
-  const matches = useMemo(
+  const tagged = useMemo(
     () =>
       posts
-        .filter((p) => p.tags.includes(tag))
+        .filter((post) => post.tags.includes(tag))
         .sort((a, b) => b.fetched_at - a.fetched_at),
     [posts, tag],
   )
 
   return (
-    <div className="mx-auto w-full max-w-[760px]">
+    <>
       <Masthead
         overline="Topic"
         title={tag}
-        subline={`${matches.length} ${matches.length === 1 ? 'post' : 'posts'}`}
+        slab={`${tagged.length} ${tagged.length === 1 ? 'post' : 'posts'}`}
       />
-      <div className="mt-6 flex justify-center">
+      <div className="mt-8 md:mt-12">
         <Breadcrumb
           items={[
-            { label: 'Wiki', to: '/wiki' },
-            { label: 'Topics', to: '/wiki#topics' },
+            { label: 'Browse', to: '/browse' },
+            { label: 'Topics', to: '/topics' },
             { label: tag },
           ]}
         />
-      </div>
-
-      <div className="mt-16 md:mt-24">
-        {matches.length > 0 ? (
-          <ul className="flex flex-col">
-            {matches.map((post) => (
+        {tagged.length > 0 ? (
+          // Posts are the section directly under the page h1, so each row title is
+          // an h2 — keeps the heading outline gap-free (DESIGN §8.1).
+          <ul className="mt-6">
+            {tagged.map((post) => (
               <li key={post.id}>
                 <PostRow post={post} as="h2" />
               </li>
             ))}
           </ul>
         ) : (
-          <EmptyState icon={SearchX} title={`Nothing saved under "${tag}"`} />
+          <EmptyState
+            icon={Inbox}
+            title="No posts under this topic"
+            hint={`Nothing is tagged “${tag}”.`}
+          />
         )}
       </div>
-    </div>
+    </>
   )
 }
 

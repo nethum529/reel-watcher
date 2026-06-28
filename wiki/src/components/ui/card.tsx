@@ -1,12 +1,13 @@
 import type { HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
-// shadcn Card, re-themed (DESIGN §6.2). Elevation = surface step + 1px border;
-// NO shadow (thesis refuses heavy depth).
+// shadcn Card, re-themed to brutalism (DESIGN §8.2): SQUARE (radius 0), hard 2px
+// border, flat --card fill, NO shadow. Elevation = the surface step + the hard
+// border, never a drop-shadow.
 export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('rounded-md border border-border bg-card text-card-foreground', className)}
+      className={cn('border-2 border-border bg-card text-card-foreground', className)}
       {...props}
     />
   )

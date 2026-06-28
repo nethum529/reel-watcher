@@ -1,29 +1,59 @@
-import { Fragment, useMemo, type ReactNode } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Fragment, useId, useMemo, useState, type ReactNode } from 'react'
 import { Search, SearchX } from 'lucide-react'
 import type { Post } from '@/data/types'
 import { usePosts } from '@/data/store'
-import { postMatches } from '@/lib/post'
-import { Input } from '@/components/ui/input'
-import { Icon } from '@/components/icon'
+import { postExcerpt, postMatches } from '@/lib/post'
 import { Masthead } from '@/components/masthead'
 import { PostRow } from '@/components/post-row'
 import { EmptyState } from '@/components/empty-state'
+import { Icon } from '@/components/icon'
+import { Input } from '@/components/ui/input'
 import { LoadBoundary } from '@/components/load-boundary'
 
-// Escape a user string for use in a RegExp.
-function escapeRe(s: string): string {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+// The Search column is left-locked to cols 1–8 (DESIGN §7 / §11). The page field
+// is pinned at 640px; results share the column width.
+const COLUMN = 'max-w-[640px]'
+const SNIPPET_LEN = 160
+
+// Regex-escape the query so a user typing "(", ".", or "\" can't break the
+// highlight pattern or inject into it (Tier-1: untrusted input → RegExp source).
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-// Wrap case-insensitive matches in <mark> (color + semantic = two channels).
-function highlight(text: string, query: string): ReactNode {
-  const q = query.trim()
-  if (!q) return text
-  const parts = text.split(new RegExp(`(${escapeRe(q)})`, 'gi'))
-  return parts.map((part, i) =>
-    part.toLowerCase() === q.toLowerCase() ? (
-      <mark key={i} className="rounded-sm bg-gold-subtle px-0.5 text-primary">
+// Build a context window around the first match so the matched term is visible in
+// the result snippet — the search payoff — regardless of which field matched.
+function matchSnippet(post: Post, query: string): string {
+  const q = query.toLowerCase()
+  const fields = [
+    post.transcript,
+    post.caption,
+    post.tags.map((tag) => `#${tag}`).join(' '),
+    `@${post.creator}`,
+  ]
+  for (const field of fields) {
+    const text = field.replace(/\s+/g, ' ').trim()
+    if (!text) continue
+    const idx = text.toLowerCase().indexOf(q)
+    if (idx === -1) continue
+    const start = Math.max(0, idx - Math.floor((SNIPPET_LEN - q.length) / 2))
+    const end = Math.min(text.length, start + SNIPPET_LEN)
+    return `${start > 0 ? '…' : ''}${text.slice(start, end)}${end < text.length ? '…' : ''}`
+  }
+  return postExcerpt(post)
+}
+
+// Wrap each case-insensitive match in <mark>. Per DESIGN §8.4 the mark is never a
+// fill that breaks contrast: transparent bg, two channels (accent-ink color + a
+// 2px Orchid underline). Original casing is preserved (split keeps the match).
+function highlight(text: string, query: string): ReactNode[] {
+  const pattern = new RegExp(`(${escapeRegExp(query)})`, 'gi')
+  return text.split(pattern).map((part, i) =>
+    i % 2 === 1 ? (
+      <mark
+        key={i}
+        className="bg-transparent font-medium text-accent-ink underline decoration-accent-ink decoration-2 underline-offset-2"
+      >
         {part}
       </mark>
     ) : (
@@ -32,88 +62,97 @@ function highlight(text: string, query: string): ReactNode {
   )
 }
 
-// A snippet of the transcript/caption centered on the first match.
-function matchSnippet(post: Post, query: string): ReactNode {
-  const q = query.trim().toLowerCase()
-  const body = (post.transcript.trim() || post.caption.trim()).replace(/\s+/g, ' ')
-  if (!body) return null
-  const idx = body.toLowerCase().indexOf(q)
-  if (idx === -1) return null
-  const start = Math.max(0, idx - 70)
-  const end = Math.min(body.length, idx + q.length + 110)
-  const slice = `${start > 0 ? '…' : ''}${body.slice(start, end)}${end < body.length ? '…' : ''}`
-  return highlight(slice, query)
-}
-
 function SearchBody() {
   const posts = usePosts()
-  const [params, setParams] = useSearchParams()
-  const query = params.get('q') ?? ''
+  const [query, setQuery] = useState('')
+  const inputId = useId()
+  const q = query.trim()
 
-  const results = useMemo(() => {
-    const q = query.trim()
-    if (!q) return []
-    return posts
-      .filter((p) => postMatches(p, q))
-      .sort((a, b) => b.fetched_at - a.fetched_at)
-  }, [posts, query])
+  const results = useMemo(
+    () => (q ? posts.filter((post) => postMatches(post, q)) : []),
+    [posts, q],
+  )
+  const count = results.length
+
+  // Live region copy (announced on change). Empty while no query so the live
+  // region exists at mount but stays silent until the user searches.
+  const status = !q
+    ? ''
+    : count === 0
+      ? `No results for “${q}”`
+      : `${count} ${count === 1 ? 'result' : 'results'} for “${q}”`
 
   return (
-    <div className="mx-auto w-full max-w-[720px]">
-      <Masthead overline="Search" title="Search" />
+    <>
+      <Masthead
+        overline="Search"
+        title="Search"
+        slab={`${posts.length} ${posts.length === 1 ? 'transcript' : 'transcripts'}`}
+      />
 
-      <section className="mt-16 flex flex-col items-center gap-3 md:mt-24">
-        <label htmlFor="search-field" className="sr-only">
-          Search transcripts, topics, and creators
+      <form
+        role="search"
+        className={`mt-8 ${COLUMN} md:mt-12`}
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <label
+          htmlFor={inputId}
+          className="font-sans text-overline font-semibold uppercase tracking-[0.12em] text-muted-foreground"
+        >
+          Search transcripts
         </label>
-        <div className="relative mx-auto w-full max-w-[560px]">
-          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-            <Icon icon={Search} size={16} />
-          </span>
+        <div className="relative mt-3">
+          <Icon
+            icon={Search}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          />
           <Input
-            id="search-field"
+            id={inputId}
             type="search"
-            autoFocus
-            placeholder="Search transcripts, topics, creators"
-            className="h-12 pl-9 text-body"
             value={query}
-            onChange={(e) => {
-              const next = e.target.value
-              setParams(next ? { q: next } : {}, { replace: true })
-            }}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Word, topic, or @creator"
+            autoComplete="off"
+            className="pl-11"
           />
         </div>
-        {query.trim() && (
-          <p className="tnum font-sans text-caption text-muted-foreground" role="status">
-            {results.length} {results.length === 1 ? 'result' : 'results'} for "{query.trim()}"
-          </p>
-        )}
-      </section>
+      </form>
 
-      <div className="mt-12">
-      {!query.trim() ? (
-        <EmptyState
-          icon={Search}
-          title="Search your saved reels"
-          hint="Match against transcripts, captions, creators, and topics."
-        />
-      ) : results.length > 0 ? (
-        <ul className="flex flex-col">
+      <p
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className={`mt-8 ${COLUMN} min-h-5 tnum font-sans text-caption text-muted-foreground`}
+      >
+        {status}
+      </p>
+
+      {q && count > 0 && (
+        <ul className={`mt-4 ${COLUMN} list-none`}>
           {results.map((post) => (
             <li key={post.id}>
-              <PostRow post={post} as="h2" snippet={matchSnippet(post, query)} />
+              <PostRow post={post} as="h2" snippet={highlight(matchSnippet(post, q), q)} />
             </li>
           ))}
         </ul>
-      ) : (
+      )}
+
+      {!q && (
         <EmptyState
-          icon={SearchX}
-          title={`No results for "${query.trim()}"`}
-          hint="Try a creator handle or a topic."
+          icon={Search}
+          title="Search the archive"
+          hint="Type a word from a transcript, caption, topic, or creator handle."
         />
       )}
-      </div>
-    </div>
+
+      {q && count === 0 && (
+        <EmptyState
+          icon={SearchX}
+          title={`No results for “${q}”`}
+          hint="Try fewer words, a creator handle, or a topic."
+        />
+      )}
+    </>
   )
 }
 

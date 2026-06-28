@@ -1,80 +1,99 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
-import { useData } from '@/data/store'
+import { useData, usePosts, useTopics, useCreators } from '@/data/store'
 import { Icon } from '@/components/icon'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
-// Staggered fade-rise delays (DESIGN §13): ~70ms apart, last enter ends ≤700ms.
+// Staggered fade-rise delays (DESIGN §13): ~70ms apart, last enter ends ≤500ms.
 // Reduced motion swaps the whole thing for a plain cross-fade (index.css).
 function enter(delayMs: number) {
   return { '--enter-delay': `${delayMs}ms` } as CSSProperties
 }
 
-// The dramatic entry (#/, DESIGN §13): full-bleed warm near-black — the deepest
-// material, distinct from the green wiki it gates — with one gold-leaf type
-// moment and a single Enter affordance, in maximum *ma*. No sidebar, no chrome.
-//
-// Surface: a user-requested exception to the no-decorative-gradient rule. Kept
-// lacquer-quiet — deep-green (--background) pooled at center fading to warm-black
-// (--sidebar-background) at the edges, with a low-alpha gold-leaf glow behind the
-// wordmark. Stops are token-built and chosen so every text pair clears AA against
-// the glow's peak (lightest underlying point): parchment ~11.7:1, muted overline/
-// count ~6.6:1, gold "Enter" link ~5.2:1. Static (no animation → reduced-motion safe).
-const surface: CSSProperties = {
-  backgroundColor: 'hsl(var(--sidebar-background))', // warm-black floor (fallback)
-  backgroundImage: [
-    'radial-gradient(ellipse 58% 42% at 50% 40%, hsl(var(--primary) / 0.07), transparent 72%)',
-    'radial-gradient(ellipse 130% 95% at 50% 42%, hsl(var(--background)), hsl(var(--sidebar-background)) 80%)',
-  ].join(', '),
+// "12 transcripts" / "1 transcript" — never bare numbers (BRAND §8: name the object).
+function plural(n: number, noun: string) {
+  return `${n} ${n === 1 ? noun : `${noun}s`}`
 }
 
+// The dramatic entry (#/, DESIGN §13): full-bleed paper (jet in dark), no top-bar
+// nav — the theme toggle is the only chrome. Eyebrow + one Anton hero, framed
+// between two 2px rules as a Swiss masthead band; a single Orchid count slab; one
+// Enter affordance. Left-locked and asymmetric. This is the product's dominant
+// element overall. Two structural rules frame the hero (DESIGN §13 allows a rule
+// above and/or below); the rules are static — only the type rises on first paint.
 export function LandingPage() {
   const state = useData()
-  const posts = state.status === 'ready' ? state.data.posts : []
-  const topicCount = new Set(posts.flatMap((p) => p.tags)).size
-  const creatorCount = new Set(posts.map((p) => p.creator)).size
-  const hasCounts = state.status === 'ready' && posts.length > 0
+  const posts = usePosts()
+  const topics = useTopics(posts)
+  const creators = useCreators(posts)
+  const ready = state.status === 'ready'
+  const hasCounts = ready && posts.length > 0
 
   return (
-    <main
-      style={surface}
-      className="flex min-h-screen flex-col items-center justify-center px-6 py-24 text-center"
-    >
-      <p
-        className="landing-enter font-sans text-overline font-semibold uppercase tracking-[0.18em] text-muted-foreground"
-        style={enter(0)}
-      >
-        Personal archive
-      </p>
+    <main className="relative flex min-h-screen flex-col justify-center">
+      <div className="rw-container w-full">
+        {/* Masthead band: eyebrow + hero framed by 2px rules (the poster frame). */}
+        <div className="border-y-2 border-border py-8 md:py-12">
+          <p
+            className="landing-enter font-sans text-overline font-semibold uppercase tracking-[0.12em] text-muted-foreground"
+            style={enter(0)}
+          >
+            Personal archive
+          </p>
 
-      <h1
-        className="landing-enter mt-8 font-display text-hero font-light tracking-[-0.02em] text-foreground"
-        style={enter(70)}
-      >
-        reel-watcher
-      </h1>
+          <h1
+            className="landing-enter mt-6 font-display text-hero uppercase tracking-[-0.01em] text-foreground"
+            style={enter(70)}
+          >
+            reel-watcher
+          </h1>
+        </div>
 
-      <div className="landing-enter my-8 gold-leaf" style={enter(140)} aria-hidden />
+        {/* The single Orchid punch: the count datum (jet on Orchid, 10.2:1). Only
+            shown with real data — never an invented number (BRAND §8). */}
+        {hasCounts ? (
+          <p
+            data-slab
+            className="landing-enter tnum mt-8 inline-block bg-primary px-4 py-2 font-condensed text-title font-medium uppercase text-primary-foreground md:mt-12"
+            style={enter(140)}
+          >
+            {plural(posts.length, 'transcript')} · {plural(topics.length, 'topic')} ·{' '}
+            {plural(creators.length, 'creator')}
+          </p>
+        ) : ready ? (
+          <p
+            className="landing-enter mt-8 font-sans text-overline uppercase tracking-[0.12em] text-muted-foreground md:mt-12"
+            style={enter(140)}
+          >
+            Archive empty · no transcripts yet
+          </p>
+        ) : null}
 
-      {hasCounts && (
-        <p
-          className="landing-enter tnum font-serif text-read text-muted-foreground"
-          style={enter(210)}
-        >
-          {posts.length} {posts.length === 1 ? 'transcript' : 'transcripts'} · {topicCount}{' '}
-          {topicCount === 1 ? 'topic' : 'topics'} · {creatorCount}{' '}
-          {creatorCount === 1 ? 'creator' : 'creators'}
-        </p>
-      )}
+        {/* Enter the archive → #/browse. The only nav element above the fold, and
+            the first/primary focus stop (the theme toggle, below in DOM, is the
+            second) per DESIGN §13. Orchid fill, jet label, 2px border, ≥44px. */}
+        <div className="landing-enter mt-8" style={enter(210)}>
+          <Link
+            to="/browse"
+            className={cn(
+              buttonVariants({ variant: 'primary' }),
+              'uppercase tracking-[0.04em]',
+            )}
+          >
+            Enter the archive
+            <Icon icon={ArrowRight} size={24} />
+          </Link>
+        </div>
+      </div>
 
-      <Link
-        to="/wiki"
-        style={enter(280)}
-        className="landing-enter mt-12 inline-flex min-h-11 items-center gap-2 rounded-md font-sans text-label font-semibold text-primary underline-offset-4 transition-colors hover:text-gold-hover hover:underline"
-      >
-        Enter the archive
-        <Icon icon={ArrowRight} size={20} />
-      </Link>
+      {/* Last in DOM so the Enter affordance is the first tab stop (DESIGN §13);
+          visually pinned top-right as the page's only chrome. */}
+      <div className="absolute right-4 top-4">
+        <ThemeToggle />
+      </div>
     </main>
   )
 }

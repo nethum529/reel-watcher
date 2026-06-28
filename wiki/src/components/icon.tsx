@@ -2,10 +2,11 @@ import type { ComponentProps } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-// Stroke-width is a brand token (BRAND §9): 1.5 default. Lucide's strokeWidth is
-// an SVG prop, not a CSS var — enforce the token here in one place. Icons inherit
-// currentColor; decorative icons are aria-hidden by default.
-export const ICON_STROKE_WIDTH = 1.5
+// Stroke-width is a brand token (BRAND §9): 2 default (brutalism is heavy, to
+// match the hard rules). Lucide's strokeWidth is an SVG prop, not a CSS var —
+// enforce the token here in one place. Pass strokeWidth={1.5} only for dense
+// data-row meta. Icons inherit currentColor; decorative icons are aria-hidden.
+export const ICON_STROKE_WIDTH = 2
 
 interface IconProps extends Omit<ComponentProps<LucideIcon>, 'ref'> {
   icon: LucideIcon

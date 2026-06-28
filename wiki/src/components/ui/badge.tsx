@@ -2,19 +2,21 @@ import type { HTMLAttributes } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
-// shadcn Badge, re-themed (DESIGN §6.3). rounded-full, sans label. Selected
-// state carries a second channel (a check icon, added by the caller).
+// shadcn Badge, re-themed to brutalism (DESIGN §8.3): SQUARE (radius 0), hard
+// 1px border, flat fill. Default = neutral chip; selected = the one place a tag
+// may take the Orchid fill (acting as the single selected punch) with jet text —
+// the caller adds a check icon as the required second channel.
 export const badgeVariants = cva(
-  'inline-flex items-center gap-1 rounded-full border font-sans text-sm font-medium leading-none transition-colors',
+  'inline-flex items-center gap-1 border font-sans text-xs font-medium uppercase leading-none tracking-[0.04em] transition-colors',
   {
     variants: {
       variant: {
         default: 'border-border bg-muted text-muted-foreground',
-        selected: 'border-primary bg-gold-subtle text-primary',
+        selected: 'border-border bg-primary text-primary-foreground',
       },
       size: {
-        default: 'px-3 py-1',
-        sm: 'px-2 py-0.5 text-xs',
+        default: 'px-2.5 py-1',
+        sm: 'px-2 py-0.5',
       },
     },
     defaultVariants: {

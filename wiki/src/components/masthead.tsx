@@ -1,36 +1,44 @@
 import type { ReactNode } from 'react'
 
 interface MastheadProps {
-  // Wide-tracked uppercase eyebrow (DESIGN §7). NOT a heading — it sits above the
-  // h1, so it stays a styled <p> to keep the heading outline gap-free (h1→h2→h3).
+  // Wide-tracked uppercase eyebrow (DESIGN §7, overline step). NOT a heading — it
+  // sits above the h1, so it stays a styled <p> to keep the heading outline
+  // gap-free (h1 → h2 → h3). E.g. "ARCHIVE", "TOPIC", "CREATOR".
   overline: string
-  // The page's dominant element: a centered Fraunces display title (the masthead
-  // signature, BRAND §3). Rendered as the page <h1>.
+  // The page's dominant element (BRAND §3): a left-locked Anton display headline,
+  // ≥2× the weight of anything near it. Rendered as the page <h1>. Uppercase.
   title: ReactNode
-  // One quiet concrete subline (count / note), never a tagline (BRAND §8).
-  subline?: ReactNode
+  // The single Orchid slab (BRAND §3): a solid --primary rectangle with jet
+  // --primary-foreground text carrying the page's key datum (a count / handle).
+  // Appears exactly once per page, only here. Omit on pages with no datum.
+  slab?: ReactNode
 }
 
-// The gold-leaf masthead, returned subordinated on every wiki page (BRAND §3,
-// DESIGN §7): centered overline → Fraunces display title → optional subline →
-// the single gold-leaf hairline. Centering is the user-mandated luxury exception;
-// it is mitigated by one dominant element here and left-aligned body text below.
-export function Masthead({ overline, title, subline }: MastheadProps) {
+// The left-locked grid-rule masthead — the signature element (BRAND §3, DESIGN
+// §7), returned on every non-landing page: eyebrow → Anton headline beside the
+// single Orchid slab → a 2px full-width hard rule. Left-locked and asymmetric,
+// never centered (BRAND §1 refuses centered symmetry).
+export function Masthead({ overline, title, slab }: MastheadProps) {
   return (
-    <header className="flex flex-col items-center gap-3 text-center">
-      <p className="font-sans text-overline font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+    <header>
+      <p className="font-sans text-overline font-semibold uppercase tracking-[0.12em] text-muted-foreground">
         {overline}
       </p>
-      <h1 className="font-display text-display font-normal tracking-[-0.02em] text-foreground">
-        {title}
-      </h1>
-      {subline && (
-        <div className="tnum flex flex-col items-center gap-4 font-sans text-caption text-muted-foreground">
-          {subline}
-        </div>
-      )}
-      {/* The recurring gold-leaf rule — appears once per page, only here. */}
-      <div className="gold-leaf mt-3" aria-hidden />
+      <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <h1 className="font-display text-display uppercase tracking-[-0.01em] text-foreground">
+          {title}
+        </h1>
+        {slab && (
+          <div
+            data-slab
+            className="inline-flex shrink-0 items-baseline gap-2 self-start bg-primary px-4 py-2 font-condensed text-title font-medium uppercase text-primary-foreground md:self-auto"
+          >
+            {slab}
+          </div>
+        )}
+      </div>
+      {/* The masthead rule — the structural seam, 2px, full content width. */}
+      <div className="mt-4 border-t-2 border-border" aria-hidden />
     </header>
   )
 }

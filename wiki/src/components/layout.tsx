@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { Sidebar, MobileBar } from '@/components/sidebar'
+import { TopBar } from '@/components/top-bar'
 
-// App shell for every wiki route: skip link → left sidebar (rail vs content) →
-// centered content area. Cmd/Ctrl+K jumps to search from anywhere (DESIGN §5).
+// App shell for every non-landing route (DESIGN §6): skip link → bold top bar →
+// left-locked content inside the 1280px Swiss grid container. Cmd/Ctrl+K jumps to
+// search from anywhere (DESIGN §5).
 export function Layout() {
   const navigate = useNavigate()
 
@@ -22,22 +23,14 @@ export function Layout() {
     <div className="min-h-screen">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-popover focus:px-4 focus:py-2 focus:font-sans focus:text-label focus:text-foreground"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:border-2 focus:border-border focus:bg-card focus:px-4 focus:py-2 focus:font-sans focus:text-label focus:text-foreground"
       >
         Skip to content
       </a>
-      <div className="md:flex">
-        <Sidebar />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <MobileBar />
-          <main
-            id="main"
-            className="flex-1 px-4 py-16 sm:px-6 lg:px-10 lg:py-24"
-          >
-            <Outlet />
-          </main>
-        </div>
-      </div>
+      <TopBar />
+      <main id="main" className="rw-container py-12 md:py-16 lg:py-20">
+        <Outlet />
+      </main>
     </div>
   )
 }
