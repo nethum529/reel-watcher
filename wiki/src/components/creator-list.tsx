@@ -11,7 +11,7 @@ export function CreatorList({ creators }: { creators: CreatorSummary[] }) {
             to={`/creator/${encodeURIComponent(c.creator)}`}
             className="group flex min-h-11 items-baseline justify-between gap-3 rounded-md px-3 py-3 transition-colors hover:bg-accent active:bg-gold-subtle"
           >
-            <span className="font-serif text-title font-medium tracking-[-0.005em] text-foreground decoration-primary underline-offset-4 group-hover:underline group-active:text-gold-pressed group-active:underline">
+            <span className="font-serif text-title font-medium tracking-[-0.005em] text-foreground decoration-primary underline-offset-4 group-hover:underline group-active:text-gold-pressed-text group-active:underline">
               @{c.creator}
             </span>
             <span className="tnum shrink-0 font-sans text-caption text-muted-foreground">

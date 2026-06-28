@@ -287,25 +287,27 @@ Reference sizing table lives in DESIGN.md §7.
 
 ## 10. Accessibility Commitments
 
-WCAG **AA is the floor, never traded for aesthetics.** Verified contrast pairs (computed against the
-exact hexes above):
+WCAG **AA is the floor, never traded for aesthetics.** Verified contrast pairs — each computed
+against **the surface the element actually renders on**, not the `--background` green (a prior
+revision mis-verified the input/meta/pressed rows against `#1C2814`):
 
-| Pair | Foreground | Background | Ratio | Pass |
+| Pair | Foreground | Background (rendered-on surface) | Ratio | Pass |
 |------|-----------|-----------|-------|------|
-| Body / headings | `#F2EDE3` | `#1C2814` | 13.2:1 | ✓ AAA |
-| Transcript serif body | `#F2EDE3` | `#1C2814` | 13.2:1 | ✓ AAA |
-| Body on sidebar | `#F2EDE3` | `#1E1415` | 15.4:1 | ✓ AAA |
-| Secondary / metadata | `#ADB0A0` | `#1C2814` | 7.0:1 | ✓ AAA |
-| Placeholder / hint | `#8C9080` | `#1C2814` | 4.7:1 | ✓ AA |
-| Muted text on card | `#ADB0A0` | `#243017` | 6.3:1 | ✓ AA |
-| Muted text on muted surface | `#ADB0A0` | `#313F22` | 5.1:1 | ✓ AA |
-| **Gold link / accent text** | **`#BF8E34`** | **`#1C2814`** | **5.24:1** | **✓ AA** |
-| Gold text on card | `#BF8E34` | `#243017` | 4.73:1 | ✓ AA |
-| Gold text on **popover** | `#BF8E34` | `#2A3A1C` | 4.15:1 | ✗ — **use gold-hover here** |
-| Gold-hover text on popover | `#D6A84E` | `#2A3A1C` | 5.56:1 | ✓ AA |
-| Gold text on sidebar | `#BF8E34` | `#1E1415` | 6.12:1 | ✓ AA |
-| Active/pressed gold link | `#9E7328` | `#1C2814` | 3.0:1 | ✓ large/UI only — pair w/ underline |
-| Button label on gold | `#1E1415` | `#BF8E34` | 6.12:1 | ✓ AA |
+| Body / headings | `#F2EDE3` | `#1C2814` `--background` | 13.2:1 | ✓ AAA |
+| Transcript serif body | `#F2EDE3` | `#1C2814` `--background` | 13.2:1 | ✓ AAA |
+| Body on sidebar | `#F2EDE3` | `#1E1415` `--sidebar` | 15.4:1 | ✓ AAA |
+| Secondary / metadata | `#ADB0A0` | `#1C2814` `--background` | 7.0:1 | ✓ AAA |
+| Placeholder on input fill | `#95998A` | `#243017` `--card` (input bg) | 4.77:1 | ✓ AA |
+| Muted text on card | `#ADB0A0` | `#243017` `--card` | 6.3:1 | ✓ AA |
+| Muted text on muted surface | `#ADB0A0` | `#313F22` `--muted` | 5.1:1 | ✓ AA |
+| Muted meta on row hover | `#ADB0A0` | `#364526` `--accent` (hover bg) | 4.66:1 | ✓ AA |
+| **Gold link / accent text** | **`#BF8E34`** | **`#1C2814` `--background`** | **5.24:1** | **✓ AA** |
+| Gold text on card | `#BF8E34` | `#243017` `--card` | 4.73:1 | ✓ AA |
+| Gold text on **popover** | `#BF8E34` | `#2A3A1C` `--popover` | 4.15:1 | ✗ — **use gold-hover here** |
+| Gold-hover text on popover | `#D6A84E` | `#2A3A1C` `--popover` | 5.56:1 | ✓ AA |
+| Gold text on sidebar | `#BF8E34` | `#1E1415` `--sidebar` | 6.12:1 | ✓ AA |
+| Pressed link text on gold-subtle | `#C08B30` | `#2E2A14` `--gold-subtle` (active bg) | 4.79:1 | ✓ AA — + underline |
+| Button label on gold | `#1E1415` | `#BF8E34` `--primary` | 6.12:1 | ✓ AA |
 | Focus ring | `#BF8E34` | `#1C2814` | 5.24:1 | ✓ (≥3:1 UI) |
 | Focus ring on sidebar | `#BF8E34` | `#1E1415` | 6.12:1 | ✓ (≥3:1 UI) |
 | Gold-leaf hairline vs bg | `#BF8E34` | `#1C2814` | 5.24:1 | ✓ (≥3:1 UI element) |
@@ -318,8 +320,12 @@ green (command palette, dropdowns) gold text **must** use the brighter `gold-hov
 implementer enforces this with a `.on-popover` modifier (DESIGN.md §0). Base gold is always fine as
 a *fill*, a *hairline*, or a *focus ring* (UI-element 3:1) on any surface.
 
-**Pressed-gold caveat:** `#9E7328` clears 3:1 (large/UI) but not 4.5:1, so the pressed link state
-always carries an underline (two-channel) — it is never communicated by color alone.
+**Pressed-gold caveat:** the pressed link state has two distinct tokens because the same gold can't
+serve as both text and fill. As *text* it rides on the dark `--gold-subtle` tint, so it uses the
+lighter `--gold-pressed-text` `#C08B30` (4.79:1 on `#2E2A14`, 5.12:1 on `#1C2814`); the deeper
+`--gold-pressed` `#9E7328` is reserved as the button's pressed *fill* (dark label on top). Even though
+the pressed text now clears 4.5:1 on its own, it still always carries an underline (two-channel) — it
+is never communicated by color alone.
 
 Commitments:
 

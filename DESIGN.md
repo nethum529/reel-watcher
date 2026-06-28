@@ -34,7 +34,7 @@ shadcn **sidebar** token set (the app shell uses `Sidebar`).
     --secondary-foreground: 40 37% 92%;
     --muted: 89 30% 19%;             /* #313F22 */
     --muted-foreground: 71 9% 66%;   /* #ADB0A0 */
-    --accent: 89 29% 23%;            /* #3A4A29  shadcn hover-surface (NOT brand accent) */
+    --accent: 89 29% 21%;            /* #364526  shadcn hover-surface (NOT brand accent); darkened so meta clears AA on row hover */
     --accent-foreground: 40 37% 92%;
 
     /* status */
@@ -64,10 +64,11 @@ shadcn **sidebar** token set (the app shell uses `Sidebar`).
   :root {
     --green-well: 96 33% 9%;         /* #151E0F  deepest well */
     --gold-hover: 40 62% 57%;        /* #D6A84E  link hover + gold-on-popover text */
-    --gold-pressed: 38 60% 39%;      /* #9E7328  pressed link (always + underline) */
+    --gold-pressed: 38 60% 39%;      /* #9E7328  pressed FILL (button active); dark label on top */
+    --gold-pressed-text: 38 60% 47%; /* #C08B30  pressed link TEXT on --gold-subtle (4.79:1) */
     --gold-subtle: 51 39% 13%;       /* #2E2A14  selected/active tint */
     --gold-foreground: 354 20% 10%;  /* #1E1415  text on gold fill */
-    --placeholder: 75 7% 53%;        /* #8C9080 */
+    --placeholder: 75 7% 57%;        /* #95998A  clears AA on the --card input fill (4.77:1) */
     --border-strong: 86 22% 31%;     /* #51603D */
     --success: 119 28% 65%;          /* #8FBF8E */
   }
@@ -322,9 +323,11 @@ cannot apply). Every color-coded state carries a second channel (icon/border/und
   {N} views`. No thumbnail tile by default; an optional 56×56 `rounded-md` slide thumb may sit left
   at subordinate weight. Text left-aligned within the centered column.
 - **default:** title `--foreground`, meta `--muted-foreground`, transparent bg.
-- **hover:** bg `--accent` (`#3A4A29`), title gold underline, cursor pointer.
+- **hover:** bg `--accent` (`#364526`), title gold underline, cursor pointer. (Meta stays
+  `--muted-foreground` `#ADB0A0` → 4.66:1 on this hover surface.)
 - **focus-visible:** 2px gold ring + 2px offset, no bg change required.
-- **active/pressed:** bg `--gold-subtle`, title `--gold-pressed` + underline.
+- **active/pressed:** bg `--gold-subtle`, title `--gold-pressed-text` (`#C08B30`, 4.79:1 on
+  `--gold-subtle`) + underline.
 - **disabled:** n/a (rows always navigate).
 - **loading:** skeleton (see empty).
 - **error:** transcript failed to scrape → inline `octagon-alert` (14px) + "transcript unavailable"
@@ -352,7 +355,8 @@ Disabled n/a; no loading/error/empty.
 - Header/landing-page search = `Input`, `bg-card` fill (so the field is distinct from `--background`
   without leaning on border contrast), leading `search` icon (16/1.5). Global palette = `Command`
   dialog on `⌘K` / `Ctrl K`, surface `--popover`.
-- **default:** `bg-card`, `border-border`, placeholder `--placeholder` (4.7:1 on the fill).
+- **default:** `bg-card`, `border-border`, placeholder `--placeholder` `#95998A` (4.77:1 on the
+  `--card` fill — measured against the fill it renders on, not `--background`).
 - **hover:** border `--border-strong`.
 - **focus-visible:** border `--primary` + 2px gold ring/offset; placeholder stays ≥4.5:1.
 - **active/typing:** caret `--primary` (gold).

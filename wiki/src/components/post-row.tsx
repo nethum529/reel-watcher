@@ -24,7 +24,7 @@ export function PostRow({ post, snippet, as: Heading = 'h3' }: PostRowProps) {
       to={`/post/${encodeURIComponent(post.id)}`}
       className="group block rounded-md px-3 py-3 transition-colors hover:bg-accent active:bg-gold-subtle"
     >
-      <Heading className="font-serif text-title font-medium tracking-[-0.005em] text-foreground decoration-primary underline-offset-4 group-hover:underline group-active:text-gold-pressed group-active:underline">
+      <Heading className="font-serif text-title font-medium tracking-[-0.005em] text-foreground decoration-primary underline-offset-4 group-hover:underline group-active:text-gold-pressed-text group-active:underline">
         {postTitle(post)}
       </Heading>
       <PostMeta post={post} className="mt-1" />
