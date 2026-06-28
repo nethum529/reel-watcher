@@ -60,8 +60,11 @@ function SearchBody() {
   return (
     <div className="flex flex-col gap-12">
       <section className="flex flex-col gap-3">
-        <label htmlFor="search-field" className="font-sans text-label font-medium text-foreground">
+        <h1 className="font-serif text-h2 font-medium tracking-[-0.015em] text-foreground">
           Search the archive
+        </h1>
+        <label htmlFor="search-field" className="sr-only">
+          Search transcripts, topics, and creators
         </label>
         <div className="relative w-full max-w-[640px]">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -97,7 +100,7 @@ function SearchBody() {
         <ul className="flex flex-col">
           {results.map((post) => (
             <li key={post.id}>
-              <PostRow post={post} snippet={matchSnippet(post, query)} />
+              <PostRow post={post} as="h2" snippet={matchSnippet(post, query)} />
             </li>
           ))}
         </ul>

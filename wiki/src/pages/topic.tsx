@@ -37,7 +37,7 @@ function TopicBody({ tag }: { tag: string }) {
         <ul className="flex flex-col">
           {matches.map((post) => (
             <li key={post.id}>
-              <PostRow post={post} />
+              <PostRow post={post} as="h2" />
             </li>
           ))}
         </ul>
