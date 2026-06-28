@@ -50,6 +50,12 @@ def ensure_fts(conn: sqlite3.Connection) -> None:
         END
         """
     )
+    transcript_count = conn.execute("SELECT COUNT(*) FROM transcripts").fetchone()[0]
+    indexed_count = conn.execute("SELECT COUNT(*) FROM transcripts_fts_docsize").fetchone()[
+        0
+    ]
+    if transcript_count and indexed_count < transcript_count:
+        conn.execute("INSERT INTO transcripts_fts(transcripts_fts) VALUES ('rebuild')")
     conn.commit()
 
 

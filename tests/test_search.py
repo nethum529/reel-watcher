@@ -31,6 +31,27 @@ def test_search_cache_returns_keyword_matches(monkeypatch, tmp_path):
     assert isinstance(results[0]["score"], float)
 
 
+def test_search_cache_finds_rows_cached_before_fts_exists(monkeypatch, tmp_path):
+    monkeypatch.setenv("REEL_WATCHER_CACHE", str(tmp_path / "transcripts.db"))
+
+    cache.cache_set(
+        "https://example.com/preexisting-match",
+        content="A detailed breakdown of sourdough fermentation timing.",
+        creator="baker",
+    )
+    cache.cache_set(
+        "https://example.com/preexisting-other",
+        content="A quick tour of a city garden.",
+        creator="gardener",
+    )
+
+    results = search.search_cache("sourdough")
+
+    assert [result["url"] for result in results] == [
+        "https://example.com/preexisting-match"
+    ]
+
+
 def test_search_cache_returns_empty_list_for_non_match(monkeypatch, tmp_path):
     monkeypatch.setenv("REEL_WATCHER_CACHE", str(tmp_path / "transcripts.db"))
     cache.cache_set("https://example.com/video", content="Only talks about ceramics.")
