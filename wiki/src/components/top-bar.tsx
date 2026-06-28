@@ -65,7 +65,9 @@ function NavItem({
       data-active-rule={active ? 'true' : undefined}
       className={cn(
         'inline-flex items-center gap-2 border-b-2 font-condensed text-label uppercase tracking-[0.04em] transition-colors',
-        sheet ? 'min-h-11 w-full px-1 py-2' : 'h-9 px-1',
+        // ≥44px hit area (BRAND §10). items-center in the 64/72px bar keeps every
+        // item's bottom aligned so the active 2px underline still reads as a baseline rule.
+        sheet ? 'min-h-11 w-full px-1 py-2' : 'min-h-11 px-1',
         active
           ? 'border-primary font-semibold text-foreground'
           : 'border-transparent font-medium text-muted-foreground hover:border-border hover:text-foreground',
@@ -96,7 +98,7 @@ export function TopBar() {
           <Link
             to="/"
             aria-label="reel-watcher — home"
-            className="inline-flex items-center font-display text-title uppercase tracking-[-0.01em] text-foreground lg:text-[26px]"
+            className="inline-flex min-h-11 items-center font-display text-title uppercase tracking-[-0.01em] text-foreground lg:text-[26px]"
           >
             reel-watcher
           </Link>

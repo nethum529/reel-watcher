@@ -22,7 +22,8 @@ export const buttonVariants = cva(
       },
       size: {
         default: 'h-11 px-4',
-        sm: 'h-9 px-3',
+        // sm = tighter horizontal footprint only; height stays ≥44px (BRAND §10).
+        sm: 'min-h-11 px-3',
         icon: 'min-h-11 min-w-11',
       },
     },

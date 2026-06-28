@@ -32,7 +32,7 @@ export function Breadcrumb({ items }: { items: Crumb[] }) {
                 )}
               </li>
               {!isLast && (
-                <li aria-hidden className="text-border-strong">
+                <li aria-hidden className="text-muted-foreground">
                   <Icon icon={ChevronRight} size={14} />
                 </li>
               )}
