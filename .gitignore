@@ -49,3 +49,6 @@ htmlcov/
 
 # Saved scraped media (instaloader output)
 :saved/
+
+# git worktrees (swarm execution dirs)
+.worktrees/
