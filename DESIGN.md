@@ -64,7 +64,7 @@ shadcn **sidebar** token set (the app shell uses `Sidebar`).
   :root {
     --green-well: 96 33% 9%;         /* #151E0F  deepest well */
     --gold-hover: 40 62% 57%;        /* #D6A84E  link hover + gold-on-popover text */
-    --gold-pressed: 38 60% 39%;      /* #9E7328  pressed FILL (button active); dark label on top */
+    --gold-pressed: 38 60% 41%;      /* #A7792A  pressed FILL (button active); dark label on top at 4.64:1 */
     --gold-pressed-text: 38 60% 47%; /* #C08B30  pressed link TEXT on --gold-subtle (4.79:1) */
     --gold-subtle: 51 39% 13%;       /* #2E2A14  selected/active tint */
     --gold-foreground: 354 20% 10%;  /* #1E1415  text on gold fill */

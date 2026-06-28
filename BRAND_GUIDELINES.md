@@ -307,7 +307,8 @@ revision mis-verified the input/meta/pressed rows against `#1C2814`):
 | Gold-hover text on popover | `#D6A84E` | `#2A3A1C` `--popover` | 5.56:1 | ✓ AA |
 | Gold text on sidebar | `#BF8E34` | `#1E1415` `--sidebar` | 6.12:1 | ✓ AA |
 | Pressed link text on gold-subtle | `#C08B30` | `#2E2A14` `--gold-subtle` (active bg) | 4.79:1 | ✓ AA — + underline |
-| Button label on gold | `#1E1415` | `#BF8E34` `--primary` | 6.12:1 | ✓ AA |
+| Button label on gold | `#1E1415` | `#BF8E34` `--primary` (resting fill) | 6.12:1 | ✓ AA |
+| Button label on pressed gold | `#1E1415` | `#A7792A` `--gold-pressed` (pressed fill) | 4.64:1 | ✓ AA |
 | Focus ring | `#BF8E34` | `#1C2814` | 5.24:1 | ✓ (≥3:1 UI) |
 | Focus ring on sidebar | `#BF8E34` | `#1E1415` | 6.12:1 | ✓ (≥3:1 UI) |
 | Gold-leaf hairline vs bg | `#BF8E34` | `#1C2814` | 5.24:1 | ✓ (≥3:1 UI element) |
@@ -323,7 +324,8 @@ a *fill*, a *hairline*, or a *focus ring* (UI-element 3:1) on any surface.
 **Pressed-gold caveat:** the pressed link state has two distinct tokens because the same gold can't
 serve as both text and fill. As *text* it rides on the dark `--gold-subtle` tint, so it uses the
 lighter `--gold-pressed-text` `#C08B30` (4.79:1 on `#2E2A14`, 5.12:1 on `#1C2814`); the deeper
-`--gold-pressed` `#9E7328` is reserved as the button's pressed *fill* (dark label on top). Even though
+`--gold-pressed` `#A7792A` is reserved as the button's pressed *fill* (dark label on top, 4.64:1 — AA
+as normal text, while still a touch deeper than the resting gold so the press still reads). Even though
 the pressed text now clears 4.5:1 on its own, it still always carries an underline (two-channel) — it
 is never communicated by color alone.
 
