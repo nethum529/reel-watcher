@@ -6,6 +6,7 @@ import { usePosts } from '@/data/store'
 import { postMatches } from '@/lib/post'
 import { Input } from '@/components/ui/input'
 import { Icon } from '@/components/icon'
+import { Masthead } from '@/components/masthead'
 import { PostRow } from '@/components/post-row'
 import { EmptyState } from '@/components/empty-state'
 import { LoadBoundary } from '@/components/load-boundary'
@@ -22,7 +23,7 @@ function highlight(text: string, query: string): ReactNode {
   const parts = text.split(new RegExp(`(${escapeRe(q)})`, 'gi'))
   return parts.map((part, i) =>
     part.toLowerCase() === q.toLowerCase() ? (
-      <mark key={i} className="rounded-sm bg-accent-subtle px-0.5 text-primary">
+      <mark key={i} className="rounded-sm bg-gold-subtle px-0.5 text-primary">
         {part}
       </mark>
     ) : (
@@ -58,15 +59,14 @@ function SearchBody() {
   }, [posts, query])
 
   return (
-    <div className="flex flex-col gap-12">
-      <section className="flex flex-col gap-3">
-        <h1 className="font-serif text-h2 font-medium tracking-[-0.015em] text-foreground">
-          Search the archive
-        </h1>
+    <div className="mx-auto w-full max-w-[720px]">
+      <Masthead overline="Search" title="Search" />
+
+      <section className="mt-16 flex flex-col items-center gap-3 md:mt-24">
         <label htmlFor="search-field" className="sr-only">
           Search transcripts, topics, and creators
         </label>
-        <div className="relative w-full max-w-[640px]">
+        <div className="relative mx-auto w-full max-w-[560px]">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
             <Icon icon={Search} size={16} />
           </span>
@@ -90,6 +90,7 @@ function SearchBody() {
         )}
       </section>
 
+      <div className="mt-12">
       {!query.trim() ? (
         <EmptyState
           icon={Search}
@@ -111,6 +112,7 @@ function SearchBody() {
           hint="Try a creator handle or a topic."
         />
       )}
+      </div>
     </div>
   )
 }

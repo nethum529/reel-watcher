@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { Nav } from '@/components/nav'
+import { Sidebar, MobileBar } from '@/components/sidebar'
 
-// App frame: skip link + sticky nav + centered content. Cmd/Ctrl+K jumps to the
-// search route from anywhere (IA: global search reachable everywhere, DESIGN §5).
+// App shell for every wiki route: skip link → left sidebar (rail vs content) →
+// centered content area. Cmd/Ctrl+K jumps to search from anywhere (DESIGN §5).
 export function Layout() {
   const navigate = useNavigate()
 
@@ -19,17 +19,25 @@ export function Layout() {
   }, [navigate])
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="min-h-screen">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-popover focus:px-4 focus:py-2 focus:font-sans focus:text-label focus:text-foreground"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-popover focus:px-4 focus:py-2 focus:font-sans focus:text-label focus:text-foreground"
       >
         Skip to content
       </a>
-      <Nav />
-      <main id="main" className="mx-auto w-full max-w-[1200px] flex-1 px-4 py-12 sm:px-6 lg:px-8">
-        <Outlet />
-      </main>
+      <div className="md:flex">
+        <Sidebar />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <MobileBar />
+          <main
+            id="main"
+            className="flex-1 px-4 py-16 sm:px-6 lg:px-10 lg:py-24"
+          >
+            <Outlet />
+          </main>
+        </div>
+      </div>
     </div>
   )
 }

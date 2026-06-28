@@ -3,87 +3,101 @@
 The single source of truth for how reel-watcher looks, sounds, and behaves. Every later
 UI decision must obey this file. Where this file and a component library disagree, this file wins.
 
+This is a **Japanese-luxury** redesign: gold-on-green, deep negative space (*ma*), exquisite
+type, quiet drama. Premium, never loud.
+
 ---
 
 ## 1. Design Thesis
 
-> **reel-watcher is a reading archive, not a feed.** It sets saved short-form-video content
-> in a serif reading column and refuses video-thumbnail grid tiles as the primary layout,
-> infinite-scroll feeds, decorative gradients/blobs/glassmorphism, heavy drop shadows, and
-> more than one accent hue — the periwinkle (`#8F9AE8`) appears *only* on links, focus rings,
-> and active state.
+> **reel-watcher is a quiet gold-on-green reading room.** It stages saved short-video transcripts
+> as centered editorial pages in deep green (`#1C2814`) lit by a single gold-leaf accent
+> (`#BF8E34`) inside generous *ma* — and it refuses video-thumbnail grids as the primary layout,
+> decorative gradients/mesh/blobs/glassmorphism, more than one accent hue, drop-shadow /
+> skeuomorphic depth, and a dense top navigation bar.
 
 This sentence is falsifiable. It explicitly refuses, by name:
 
-1. Thumbnail-grid tiles as the primary browse layout (the source apps already do that).
-2. Infinite-scroll / feed pagination (this is a library you *finished* watching, not a feed).
-3. Decorative gradients, mesh blobs, and default glassmorphism.
-4. Heavy drop shadows / skeuomorphic depth.
-5. More than one accent hue in UI chrome.
+1. **Thumbnail-grid tiles** as the primary browse layout (the source apps already do that; we read).
+2. **Decorative gradients, mesh blobs, and default glassmorphism.**
+3. **More than one accent hue** in UI chrome — gold is the *only* chromatic color.
+4. **Drop-shadow / skeuomorphic depth** — elevation is surface lightness + a 1px hairline, never a shadow.
+5. **A dense top navigation bar** — navigation lives in a quiet left rail; the content area is for content.
 
-If you find any of these five in the build, the build violates the brand. The product's entire
-job is to turn ephemeral, scroll-and-forget reels into a considered, *readable, searchable*
-personal archive. Restraint is the point.
+If you find any of these five in the build, the build violates the brand. The product's job is to
+turn ephemeral, scroll-and-forget reels into a considered, *readable, searchable* archive that
+feels like a private library, not a feed. Restraint and *ma* are the point.
 
 ---
 
 ## 2. Selected Direction
 
-**Explicit user direction — the two default directions (Sakazuki / Tresmares) do not apply.**
+**Explicit user direction — Japanese luxury (the sakazuki minimal-editorial sensibility), executed
+dark-first on a mandated three-color base.** The two default directions do not apply; the mandate
+governs every token below.
 
-The user mandated, non-negotiably:
+Mandated, non-negotiable:
 
-- **Direction:** typographic minimalism — type-led hierarchy, generous whitespace, restraint.
-- **Color base:** `#0F0F0F` near-black background + `#8F9AE8` periwinkle accent; full system
-  derived from these two. **Dark theme is primary.**
+- **Direction:** Japanese-luxury minimal-editorial — restraint, *ma* (negative space), refined
+  materiality, quiet drama, exquisite type. Premium, not loud.
+- **Palette base (three swatches):** `#1C2814` deep green = primary background of the whole app;
+  `#BF8E34` gold/ochre = the accent (links, focus, key emphasis, the gold-leaf moment); `#1E1415`
+  warm near-black = deepest surfaces / contrast wells / the landing. The full system is derived
+  from these three. **Dark, green-based theme is primary.**
+- **Layout:** persistent **left sidebar** navigation on the wiki routes (nav rail vs content area);
+  **content is centered**; a dramatic full-screen **landing page** with no sidebar precedes the wiki.
 - **Component system:** shadcn/ui (React + Vite + Tailwind) first; all tokens map to shadcn's
-  CSS-variable theming convention so components drop in re-themed.
+  CSS-variable convention on `:root` so components drop in re-themed.
 - **Icons:** Lucide exclusively.
 
-The three selection questions are answered for completeness, but the mandate governs:
+The three selection questions, answered for completeness (the mandate still governs):
 
 | # | Question | Answer for reel-watcher |
 |---|----------|-------------------------|
-| 1 | Restraint-as-signal? | Yes — the design must disappear behind the content. |
-| 2 | Trust-as-primary-job? | No — single-user personal tool; no institution to trust. |
-| 3 | Editorial vs functional? | **Editorial** — reading and searching saved content *is* the product. |
+| 1 | Restraint-as-signal? | **Yes** — quiet confidence; the design recedes so the words read. |
+| 2 | Trust-as-primary-job? | No — single-user personal archive; no institution to vouch for. |
+| 3 | Editorial vs functional? | **Editorial** — reading and searching saved transcripts *is* the product. |
 
-This maps closest to a minimal-editorial posture, but executed dark-first on the user's
-mandated two-color base. We follow the mandate, not a default's font/palette stack.
+Two of three resolve to the minimal-editorial (sakazuki) posture, which is exactly the
+Japanese-luxury sensibility the user mandated — restraint as signal, content as the product. We
+execute it dark-first on the mandated gold/green/warm-black base rather than a default font/palette.
 
 ---
 
 ## 3. Signature Element
 
-**The reading column.**
+**The gold-leaf masthead in a field of *ma*.**
 
-On a post-detail page, the transcript is set in a serif (Newsreader) in a single,
-measure-constrained column (~66ch) that is the **dominant element at ≥2× the visual weight**
-of everything around it. This is the one load-bearing move: the entire app exists to make a
-saved video *readable*, so the reading of it must visibly dominate.
+One typographic moment at extreme scale — a centered display heading set in Fraunces, surrounded
+by deliberate emptiness, anchored by a **single thin gold hairline** (the "gold-leaf" rule). On the
+landing it fills the viewport (gold-and-off-white on warm-black). On every wiki page it returns,
+subordinated, as the page masthead: a centered Fraunces title with the same gold hairline beneath
+it. This is the one load-bearing move — it is what makes a folder of scraped `.txt` files feel like
+a *bound, edited collection*. It is the **dominant element at ≥2× the visual weight** of anything
+near it on its page.
 
-This is supported by one principle applied product-wide — the **serif-content / sans-chrome
-duality**:
+It is supported by one product-wide principle — the **serif-content / sans-chrome duality**:
 
-- **Serif (Newsreader)** is reserved for *content the user came to read*: transcripts, post
-  titles, topic names, creator names as headings, pull quotes.
-- **Sans (Inter)** is everything that is *interface*: navigation, search, badges/tags, buttons,
-  metadata (views, dates, counts), captions, labels.
+- **Display serif (Fraunces)** — the gold-leaf masthead only: landing hero, page mastheads. Never
+  below 40px, never body, never in chrome.
+- **Reading serif (Newsreader)** — content the user came to read: transcript body, post/topic/
+  creator titles in lists, pull quotes.
+- **Sans (Inter)** — everything that is interface: sidebar, search, badges, buttons, metadata,
+  labels, breadcrumbs.
 
-This duality is load-bearing, not stylistic: it is what makes a folder of scraped `.txt`
-files feel like an *edited archive* instead of a debug dump. If you swapped the serif for the
-sans, the product would read as a file browser — proof the choice carries meaning.
+Swap the serif for the sans and the product reads as a file browser — proof the choice carries
+meaning, not decoration.
 
-### Do-not-compete list (nothing may out-weight the reading column on a post page)
+### Do-not-compete list (nothing may out-weight the masthead / reading column on its page)
 
-- No card chrome, border, or shadow box drawn around the transcript column.
-- No accent-colored fills inside the reading column (inline links only).
-- No sidebar, related-posts rail, or sticky promo competing for attention beside it on desktop;
-  secondary content (slides, metadata, source link) sits *below or above*, never abreast at
-  equal weight.
-- Slide-OCR and thumbnails render at subordinate scale and muted treatment — never as a
-  full-width hero that upstages the text.
-- No second accent hue, no oversized iconography, no animated affordance in the column.
+- No second display moment on a page — one masthead, one hairline. The gold-leaf rule appears
+  **once** per masthead, never as a repeated divider between every row.
+- No card chrome, border, or box drawn around the post-detail reading column.
+- No accent-colored fills inside the reading column (inline gold links only).
+- No related-posts rail, sticky promo, or sidebar widget competing abreast of the reading column on
+  desktop; secondary content (slides, metadata, source link) sits *below*, never alongside at equal weight.
+- Slide-OCR and thumbnails render at subordinate scale and muted treatment — never a full-width hero.
+- No gradient, blob, glass, drop-shadow, or second accent hue anywhere on the page.
 
 ---
 
@@ -91,196 +105,232 @@ sans, the product would read as a file browser — proof the choice carries mean
 
 ### 4-step OKLCH derivation trace
 
-**Step 1 — Base hue.** Mandated accent `#8F9AE8` resolves to **OKLCH(0.709, 0.115, 277°)** — a
-light, low-chroma blue-violet (periwinkle). Hue 277° is the spine of the whole system; the
-neutral ramp borrows it.
+**Step 1 — Base hue.** Two anchors, both user-mandated:
+- Background green `#1C2814` ≈ **OKLCH(0.27, 0.045, 130°)** — a deep, low-chroma forest green. Hue
+  130° is the spine of the whole neutral system; every surface borrows it.
+- Accent gold `#BF8E34` ≈ **OKLCH(0.66, 0.115, 82°)** — a muted ochre/gold-leaf, not a saturated amber.
 
-**Step 2 — Hue-biased neutrals.** The neutral ramp injects ~245° (HSL) / 277° (OKLCH) hue at
-low chroma so it is never raw Tailwind `gray`/`slate`. Per the user mandate the literal floor
-`--background` is held at true `#0F0F0F` (the brand anchor); **every surface above the floor
-carries periwinkle tint** (cards, popovers, muted, borders), which is what satisfies the
-"hue-injected neutral ramp" rule — the ramp as a system is biased, only its named anchor is
-neutral by decree. Lightness steps below.
+**Step 2 — Hue-biased neutrals.** The whole surface ramp is built on the green hue (≈130° OKLCH /
+≈90° HSL) at low chroma — it is never raw Tailwind `gray`/`slate`. Surfaces step up in lightness
+from the background green; the warm near-black `#1E1415` (354° HSL, a *warm* hue) is reserved for
+the deepest wells — the sidebar rail and the landing — so the nav reads as a distinct material
+against the green content well. Text neutrals are warm parchment off-whites (≈40–75° HSL) for the
+gold-leaf warmth. Lightness steps below.
 
-**Step 3 — Accent.** Accent is `#8F9AE8` at OKLCH L=0.71, C=0.115. Because the app is
-dark-first, the accent is already in its "dark-mode" high-L form (light periwinkle on near-black),
-so no inversion is needed. A pressed/active step drops to L≈0.62; a hover step rises to L≈0.78.
+**Step 3 — Accent.** Gold `#BF8E34` (OKLCH L≈0.66, C≈0.115). Because the app is dark-first, gold is
+already in a high-contrast form against the dark greens, so no inversion is needed. A hover step
+brightens to `#D6A84E` (L≈0.72); a pressed step deepens to `#9E7328` (L≈0.50). The brighter hover
+step doubles as the **gold-text-on-lighter-surfaces** step (see §10 — base gold fails AA on the
+lightest overlay green).
 
 **Step 4 — Measure all pairs.** See §10 contrast table.
 
 ### ΔE vs the slop accent family
 
-| Compared to | Slop hex | reel-watcher accent | Approx ΔE2000 | Verdict |
-|-------------|----------|---------------------|---------------|---------|
-| Tailwind indigo | `#6366F1` | `#8F9AE8` | ≈ 22 | Clears ≥10 (different L: 0.51→0.71, C: 0.21→0.115) |
-| Tailwind violet | `#8B5CF6` | `#8F9AE8` | ≈ 20 | Clears ≥10 |
-| Tailwind blue | `#3B82F6` | `#8F9AE8` | ≈ 24 | Clears ≥10 |
+| Compared to | Slop hex | reel-watcher gold | Approx ΔE2000 | Verdict |
+|-------------|----------|-------------------|---------------|---------|
+| Tailwind amber | `#F59E0B` | `#BF8E34` | ≈ 14 | Clears ≥10 (darker L 0.78→0.66, lower C, browner) |
+| Tailwind yellow | `#EAB308` | `#BF8E34` | ≈ 15 | Clears ≥10 |
+| Tailwind orange | `#F97316` | `#BF8E34` | ≈ 22 | Clears ≥10 |
 
-The periwinkle is a desaturated *pastel*, materially lighter and lower-chroma than the
-saturated default indigo/violet — it clears the ≥10 bar on its own. It is also user-mandated,
-so exempt regardless.
+The gold is a desaturated, dark *ochre* (gold-leaf), materially deeper and less chromatic than the
+bright Tailwind amber/yellow — it clears the ≥10 bar on its own, and is user-mandated regardless.
 
-### Neutral ramp (dark-first) — hue 245° (HSL)
+### Surface ramp (dark-first, green-based)
+
+Hue ≈90° HSL (green), except the warm-black wells. All values are exact hex with shadcn HSL.
 
 | Token / step | Hex | HSL (shadcn) | Role |
 |--------------|-----|--------------|------|
-| neutral-floor | `#0F0F0F` | `0 0% 6%` | `--background` — page base (held neutral per mandate) |
-| neutral-1 | `#161618` | `240 6% 9%` | `--card` — primary surface |
-| neutral-2 | `#1B1B1E` | `240 6% 11%` | `--popover` — overlays, command palette |
-| neutral-3 | `#212126` | `240 6% 14%` | `--muted` / `--secondary` — recessed fills, badges |
-| neutral-4 | `#26262B` | `240 6% 16%` | `--accent` (shadcn hover-surface), selected row base |
-| border-1 | `#2B2B30` | `240 7% 18%` | `--border` / `--input` — default hairlines |
-| border-2 | `#3A3A43` | `244 8% 24%` | strong borders, focused input idle edge |
-| text-muted | `#A1A1AC` | `240 6% 65%` | `--muted-foreground` — secondary text, metadata |
-| text-placeholder | `#87878F` | `240 5% 55%` | input placeholders, hints (still ≥4.5:1) |
-| text-strong | `#F4F4F6` | `240 9% 96%` | `--foreground` — primary text, headings |
+| green-well | `#151E0F` | `96 33% 9%` | deepest green well (active reading background, footer) |
+| **background** | **`#1C2814`** | **`96 33% 12%`** | `--background` — the content area (primary, mandated) |
+| sidebar-bg | `#1E1415` | `354 20% 10%` | `--sidebar-background` — nav rail (warm near-black, mandated) |
+| card | `#243017` | `89 35% 14%` | `--card` — raised content surface (topic/creator tiles, input fill) |
+| popover | `#2A3A1C` | `92 35% 17%` | `--popover` — overlays, command palette (floats above scrim) |
+| muted / secondary | `#313F22` | `89 30% 19%` | `--muted` / `--secondary` — recessed fills, badge base |
+| accent-surface | `#3A4A29` | `89 29% 23%` | `--accent` (shadcn hover-surface), hovered/selected row base |
+| border | `#3F4D2E` | `87 25% 24%` | `--border` — default hairlines, sidebar/content seam |
+| border-strong | `#51603D` | `86 22% 31%` | `--input` focused-idle edge, strong dividers |
 
-### Accent ramp — periwinkle, hue 233° (HSL)
+### Text neutrals (warm parchment)
+
+| Token | Hex | HSL | Role |
+|-------|-----|-----|------|
+| foreground | `#F2EDE3` | `40 37% 92%` | `--foreground` — body, headings, transcript |
+| muted-foreground | `#ADB0A0` | `71 9% 66%` | `--muted-foreground` — secondary text, metadata |
+| placeholder | `#8C9080` | `75 7% 53%` | input placeholders, hints (still ≥4.5:1 on field fill) |
+
+### Gold accent ramp — gold-leaf, hue ≈39° HSL
 
 | Step | Hex | HSL | Role |
 |------|-----|-----|------|
-| accent-hover | `#B4BCEF` | `231 65% 82%` | link hover, hovered active state |
-| **accent (base)** | **`#8F9AE8`** | **`233 66% 74%`** | `--primary`, `--ring`, links, active nav, key emphasis |
-| accent-pressed | `#6E7CDC` | `231 62% 65%` | `:active`/pressed link & control state |
-| accent-subtle-bg | `#191B2B` | `231 27% 13%` | tint behind selected nav item / active search result |
-| accent-foreground | `#0F0F0F` | `240 9% 7%` | dark text/icon *on* a filled accent surface |
+| gold-hover | `#D6A84E` | `40 62% 57%` | link hover; **gold text on lighter surfaces** (popover) |
+| **gold (base)** | **`#BF8E34`** | **`39 57% 48%`** | `--primary`, `--ring`, links, active nav, gold-leaf rule, key emphasis |
+| gold-pressed | `#9E7328` | `38 60% 39%` | `:active` / pressed link & control state |
+| gold-subtle | `#2E2A14` | `51 39% 13%` | tint behind selected nav item / active result (the "gold-leaf glow") |
+| gold-foreground | `#1E1415` | `354 20% 10%` | dark text/icon *on* a filled gold surface |
 
-> **One-hue rule.** `#8F9AE8` and its four steps are the *only* chromatic color in UI chrome.
-> Semantic status colors (below) are functional signals, not brand chrome, and never appear
-> decoratively.
+> **One-hue rule.** `#BF8E34` and its steps are the *only* chromatic color in UI chrome. Semantic
+> status colors (§5) are functional signals, never decorative, and never appear as brand chrome.
 
 ---
 
 ## 5. Semantic Colors
 
-Functional only. Each pairs with a **fixed Lucide icon** (color is never the only channel —
-Tier 1 rule #4) and is hue-separated from the periwinkle accent (H≈277° OKLCH) to avoid
-collision.
+Functional only. Each pairs with a **fixed Lucide icon** (color is never the only channel — Tier 1
+rule #4) and is hue-separated from the gold accent (≈39° HSL) to avoid collision.
 
-| Role | Hex | HSL | On `#0F0F0F` | Fixed Lucide icon | Accent-collision |
+To keep the one-hue discipline (and because an amber "warning" would collide with the gold accent),
+the system carries **only two chromatic semantics — error and success** — plus a **neutral notice**
+that uses `--muted-foreground` + an icon and no color at all. The app's real status moments map
+cleanly: scrape failed → error; nothing copied/missing transcript → neutral notice; copied → success.
+
+| Role | Hex | HSL | On `#1C2814` | Fixed Lucide icon | Accent-collision |
 |------|-----|-----|--------------|-------------------|------------------|
-| Destructive / error | `#E5736B` | `6 70% 67%` | 6.2:1 ✓ | `octagon-alert` | H≈25° vs 277° — clear |
-| Warning | `#E0B341` | `44 73% 56%` | 9.6:1 ✓ | `triangle-alert` | H≈85° — clear |
-| Success | `#6FCF8E` | `141 50% 62%` | 9.8:1 ✓ | `circle-check` | H≈150° — clear |
-| Info | `#8F9AE8` | `233 66% 74%` | 7.1:1 ✓ | `info` | **= accent by design** (the system has one blue; info maps to it, never a 2nd blue) |
+| Destructive / error | `#E2897F` | `6 65% 72%` | 5.96:1 ✓ | `octagon-alert` | H≈6° vs 39° — clear |
+| Success | `#8FBF8E` | `119 28% 65%` | 7.35:1 ✓ | `circle-check` | H≈119° — clear |
+| Notice (neutral) | `#ADB0A0` | `71 9% 66%` | 7.0:1 ✓ | `info` | no chroma — cannot collide |
 
-`--destructive` / `--destructive-foreground` are wired into the shadcn `:root` (§ DESIGN.md).
-Warning/success/info are app-level tokens used only for the few real status moments
-(scrape-failed badge, transcript-missing notice, search-empty), never as decoration.
+`--destructive` / `--destructive-foreground` are wired into the shadcn `:root` (DESIGN.md §0).
+Success and notice are app-level tokens used only for the few real status moments, never decoration.
 
 ---
 
 ## 6. Dark Mode
 
-Dark is **primary and the default `:root`**, as mandated. A light theme is *not in scope* for v1
-and the thesis does not require it. If one is ever added it must be authored as a separate
-parallel palette (not a CSS inversion) under a `.light` class; until then, ship dark only and
-set `<meta name="color-scheme" content="dark">`.
+Dark (green-based) is **primary and the default `:root`**, as mandated. A light theme is *not in
+scope* for v1 and the thesis does not require it — a "luxury reading room" is a dark room. If a
+light theme is ever added it must be authored as a separate parallel palette (not a CSS inversion)
+under a `.light` class. Until then, ship dark only and set `<meta name="color-scheme" content="dark">`.
 
 ---
 
 ## 7. Typography
 
-Two families, strictly partitioned by the §3 duality. Self-hosted via `@fontsource` for
+Three families, strictly partitioned by the §3 duality. Self-hosted via `@fontsource` for
 performance (no FOIT/CLS, no third-party origin).
 
 ### Faces
 
 | Face | Family | Used for | Never used for |
 |------|--------|----------|----------------|
-| **Serif** | **Newsreader** (variable, optical-size) | Transcript body, post titles, topic/creator page headings, pull quotes | Navigation, buttons, badges, metadata, form labels, tables |
-| **Sans** | **Inter** (variable) | All UI chrome: nav, search, buttons, badges/tags, metadata, captions, labels, breadcrumbs | The transcript reading body |
-
-Newsreader is a text-first editorial serif with true optical sizing — it reads well at 18px on
-screen, which is why it is *not* display-only here (unlike the Fraunces display-only rule, which
-does not apply to this project; Fraunces is not used). Inter is the neutral workhorse for chrome.
+| **Display serif** | **Fraunces** (variable, `opsz` axis) | Landing hero, page mastheads — the gold-leaf moment | Body, reading column, any chrome, anything < 40px |
+| **Reading serif** | **Newsreader** (variable, optical-size) | Transcript body, post/topic/creator titles in lists, pull quotes | Sidebar, buttons, badges, metadata, form labels |
+| **Sans** | **Inter** (variable) | Sidebar, search, buttons, badges, metadata, captions, labels, breadcrumbs | The transcript reading body, mastheads |
 
 ### Per-face rationale
 
-- **Newsreader (serif):** gives spoken-word transcripts the cadence of an *edited transcript* /
-  longform article — the core thesis move. Optical sizes keep it crisp from 18px body up to a
-  40px page title.
-- **Inter (sans):** disappears as chrome; tabular figures (`font-feature-settings: "tnum" 1`)
-  keep view-counts and dates aligned in lists.
+- **Fraunces (display):** high-contrast, optical "Old Style" serif with genuine drama at large
+  optical sizes (`opsz: 144`) — the luxury masthead voice. **Display-only**: never body, never below
+  40px, never in chrome. This is the one place expressive type is allowed.
+- **Newsreader (reading):** a lower-contrast text serif with true optical sizing — reads cleanly at
+  19px and gives spoken-word transcripts the cadence of an *edited longform article*. The Fraunces↔
+  Newsreader pairing is intentional: dramatic high-contrast display over calm low-contrast reading.
+- **Inter (sans):** disappears as chrome; tabular figures (`"tnum" 1`) align counts and dates.
 
 ### Weight → role map (max discipline)
 
-| Weight | Newsreader | Inter |
-|--------|-----------|-------|
-| 400 Regular | transcript body, pull quotes (italic 400 for quotes) | metadata, captions, body chrome |
-| 500 Medium | post / topic / creator titles | nav items, badges, input text, active labels |
-| 600 SemiBold | — (serif stays ≤500) | buttons, section overlines, emphasized labels |
+| Weight | Fraunces | Newsreader | Inter |
+|--------|----------|-----------|-------|
+| 300 Light | landing hero (large optical) | — | — |
+| 400 Regular | page mastheads | transcript body, pull quotes (italic 400) | metadata, captions, body chrome |
+| 500 Medium | — | post / topic / creator titles | sidebar items, badges, input text, active labels |
+| 600 SemiBold | — | — | buttons, overlines, emphasized labels |
 
-No weight outside {400, 500, 600}. No bold 700 except `--destructive` inline error text. The
-serif never exceeds 500 — weight contrast in content comes from *size*, not heft.
+No weight outside {300, 400, 500, 600}; 300 is Fraunces-display only. No bold 700 except
+`--destructive` inline error text. Reading serif stays ≤500 — content weight contrast comes from
+*size*, not heft.
+
+### Tracking & leading (canonical; do not improvise)
+
+- Fraunces hero/masthead: tracking **-0.02em**, line-height **1.0–1.1**.
+- Newsreader titles: **-0.01em**; reading body 18–19px: **0**, line-height **1.75**.
+- Inter UI: **-0.011em** at 16px, **0** at ≤14px.
+- **Uppercase overlines (signature luxury move): +0.18em**, line-height 1.3 — wide-tracked eyebrows
+  are part of the Japanese-luxury voice and appear above mastheads ("ARCHIVE", "TOPIC").
 
 ---
 
 ## 8. Voice Fingerprint
 
-The app is read by one person (its owner) and the content is the creators' words, not ours. Our
-copy is the thin chrome around it: labels, empty states, counts.
+The app is read by one person (its owner); the content is the creators' words, not ours. Our copy
+is the thin chrome around it: labels, empty states, counts. Quiet and exact, like a museum caption.
 
 ```
 Always: name the real object ("12 posts", "transcript", "from @creator") ·
         use the source's own vocabulary (Reel / Short / TikTok, never "content piece") ·
         state counts and dates precisely (relative date + exact on hover)
 Never:  marketing verbs or hype — no Unlock/Elevate/Empower/Supercharge/Transform/
-        Streamline/Seamlessly/Effortlessly anywhere in UI copy.
+        Streamline/Seamlessly/Effortlessly/Curate anywhere in UI copy.
 ```
 
-Reading level: plain, ~grade 7. Labels are nouns or noun+count ("Topics", "47 saved",
-"No transcript yet"), never slogans.
+Reading level: plain, ~grade 7. Labels are nouns or noun+count ("Topics", "47 saved", "No
+transcript yet"), never slogans. The landing may carry **one** quiet, concrete line — never a tagline.
 
 ---
 
 ## 9. Icons
 
-- **Lucide only.** No other icon set, no emoji in UI chrome (emoji that appear inside a
-  scraped caption are *content* and render as-is).
-- **Stroke-width is a brand token: `1.5`** as the default, matching the medium type weight of the
-  chrome. Use `2` only for the single accent/active icon in a control (e.g. the active nav item);
-  use `1` only inside dense data rows where 1.5 reads heavy. Stroke-width tracks type weight:
-  lighter context → thinner stroke.
+- **Lucide only.** No other icon set, no emoji in UI chrome (emoji inside a scraped caption are
+  *content* and render as-is).
+- **Stroke-width is a brand token: `1.5`** default, matching the medium chrome weight. Use `2` only
+  for the single active/emphasis icon in a control (active sidebar item); use `1` only in dense data
+  rows where 1.5 reads heavy. Stroke tracks type weight: lighter context → thinner stroke.
 - **Color:** icons inherit `currentColor`. In chrome they are `--muted-foreground`; on hover/active
-  they take `--primary`. Never multicolor.
+  they take `--primary` (gold). Never multicolor.
 - **ARIA:** decorative icons get `aria-hidden="true"`; an icon that *is* the only label (icon-only
   button) gets an `aria-label` and a ≥44×44px hit area (Tier 1 rule #3).
 
-Reference sizing table lives in DESIGN.md §6.
+Reference sizing table lives in DESIGN.md §7.
 
 ---
 
 ## 10. Accessibility Commitments
 
-WCAG **AA is the floor, never traded for aesthetics**. Verified contrast pairs against `#0F0F0F`
-and surfaces:
+WCAG **AA is the floor, never traded for aesthetics.** Verified contrast pairs (computed against the
+exact hexes above):
 
 | Pair | Foreground | Background | Ratio | Pass |
 |------|-----------|-----------|-------|------|
-| Body / headings | `#F4F4F6` | `#0F0F0F` | 18.1:1 | ✓ AAA |
-| Transcript serif body | `#F4F4F6` | `#0F0F0F` | 18.1:1 | ✓ AAA |
-| Secondary / metadata | `#A1A1AC` | `#0F0F0F` | 7.0:1 | ✓ AAA |
-| Placeholder / hint | `#87878F` | `#0F0F0F` | 5.3:1 | ✓ AA |
-| Muted text on card | `#A1A1AC` | `#161618` | 6.4:1 | ✓ AA |
-| Link / accent text | `#8F9AE8` | `#0F0F0F` | 7.1:1 | ✓ AAA |
-| Active/pressed link | `#6E7CDC` | `#0F0F0F` | 5.0:1 | ✓ AA |
-| Button label on accent | `#0F0F0F` | `#8F9AE8` | 7.1:1 | ✓ AAA |
-| Focus ring | `#8F9AE8` | `#0F0F0F` | 7.1:1 | ✓ (≥3:1 UI) |
-| Border vs base | `#2B2B30` | `#0F0F0F` | 1.4:1 | ✓ (non-text, decorative hairline) |
-| Error text | `#E5736B` | `#0F0F0F` | 6.2:1 | ✓ AA |
-| Success text | `#6FCF8E` | `#0F0F0F` | 9.8:1 | ✓ AAA |
-| Warning text | `#E0B341` | `#0F0F0F` | 9.6:1 | ✓ AAA |
+| Body / headings | `#F2EDE3` | `#1C2814` | 13.2:1 | ✓ AAA |
+| Transcript serif body | `#F2EDE3` | `#1C2814` | 13.2:1 | ✓ AAA |
+| Body on sidebar | `#F2EDE3` | `#1E1415` | 15.4:1 | ✓ AAA |
+| Secondary / metadata | `#ADB0A0` | `#1C2814` | 7.0:1 | ✓ AAA |
+| Placeholder / hint | `#8C9080` | `#1C2814` | 4.7:1 | ✓ AA |
+| Muted text on card | `#ADB0A0` | `#243017` | 6.3:1 | ✓ AA |
+| Muted text on muted surface | `#ADB0A0` | `#313F22` | 5.1:1 | ✓ AA |
+| **Gold link / accent text** | **`#BF8E34`** | **`#1C2814`** | **5.24:1** | **✓ AA** |
+| Gold text on card | `#BF8E34` | `#243017` | 4.73:1 | ✓ AA |
+| Gold text on **popover** | `#BF8E34` | `#2A3A1C` | 4.15:1 | ✗ — **use gold-hover here** |
+| Gold-hover text on popover | `#D6A84E` | `#2A3A1C` | 5.56:1 | ✓ AA |
+| Gold text on sidebar | `#BF8E34` | `#1E1415` | 6.12:1 | ✓ AA |
+| Active/pressed gold link | `#9E7328` | `#1C2814` | 3.0:1 | ✓ large/UI only — pair w/ underline |
+| Button label on gold | `#1E1415` | `#BF8E34` | 6.12:1 | ✓ AA |
+| Focus ring | `#BF8E34` | `#1C2814` | 5.24:1 | ✓ (≥3:1 UI) |
+| Focus ring on sidebar | `#BF8E34` | `#1E1415` | 6.12:1 | ✓ (≥3:1 UI) |
+| Gold-leaf hairline vs bg | `#BF8E34` | `#1C2814` | 5.24:1 | ✓ (≥3:1 UI element) |
+| Error text | `#E2897F` | `#1C2814` | 5.96:1 | ✓ AA |
+| Success text | `#8FBF8E` | `#1C2814` | 7.35:1 | ✓ AAA |
+
+**Critical gold rule (do not violate):** base gold `#BF8E34` as *text* is only legible on surfaces
+at or darker than `--card` (background, card, sidebar, gold-subtle). On the lighter `--popover`
+green (command palette, dropdowns) gold text **must** use the brighter `gold-hover #D6A84E`. The
+implementer enforces this with a `.on-popover` modifier (DESIGN.md §0). Base gold is always fine as
+a *fill*, a *hairline*, or a *focus ring* (UI-element 3:1) on any surface.
+
+**Pressed-gold caveat:** `#9E7328` clears 3:1 (large/UI) but not 4.5:1, so the pressed link state
+always carries an underline (two-channel) — it is never communicated by color alone.
 
 Commitments:
 
-- **Focus token:** `--ring` (`#8F9AE8`), 2px ring + 2px offset on every focusable element via
+- **Focus token:** `--ring` (`#BF8E34`), 2px ring + 2px offset on every focusable element via
   `:focus-visible`. Never `outline: none` without this replacement.
 - **Hit areas:** ≥44×44px for all interactive targets; icon-only buttons `min-h-11 min-w-11`.
 - **Two-channel states:** every color-coded state also carries an icon, label, border, or underline.
-- **Forced colors:** under `forced-colors: active` we drop custom colors and rely on system
-  `ButtonText`/`Canvas`/`Highlight`; the focus ring maps to system `Highlight` (DESIGN.md §11).
-- **Reduced motion:** `prefers-reduced-motion: reduce` removes all transforms; cross-fade only.
+- **Forced colors:** under `forced-colors: active` drop custom colors and rely on system
+  `ButtonText`/`Canvas`/`Highlight`; focus ring maps to system `Highlight` (DESIGN.md §11).
+- **Reduced motion:** `prefers-reduced-motion: reduce` removes all transforms; cross-fade only,
+  including the landing entrance (DESIGN.md §8 / §12).
 
 ---
 
@@ -289,10 +339,11 @@ Commitments:
 - **v1 scope: Latin script (LGC), left-to-right**, primarily English UI chrome. Scraped transcript
   content may contain any Unicode (emoji, hashtags, non-Latin captions); the reading column must
   render arbitrary UTF-8 without breaking.
-- This scope gates two choices documented in DESIGN.md: tracking values are tuned for Latin
-  (do not apply negative tracking to CJK if scope ever widens), and line-height 1.7 on the serif
-  body assumes Latin ascender/descender metrics.
-- No RTL mirroring in v1. If added later, use logical properties (`margin-inline`,
-  `padding-inline`, `text-align: start`) — already the default in DESIGN.md so the path is open.
-- Newsreader + Inter both cover Latin-1/Latin-Extended; non-Latin transcript glyphs fall back to
-  the system UI stack via the `font-family` fallback chain (DESIGN.md §10).
+- This scope gates two choices in DESIGN.md: tracking values (incl. the +0.18em overlines and
+  negative display tracking) are tuned for Latin — do **not** apply negative tracking to CJK if scope
+  widens; and line-height 1.75 on the reading serif assumes Latin ascender/descender metrics.
+- No RTL mirroring in v1. If added later, use logical properties (`margin-inline`, `padding-inline`,
+  `text-align: start`/`end`) — already the default in DESIGN.md so the path is open. Note: the
+  sidebar is `inset-inline-start`, so it mirrors correctly under RTL without rework.
+- Fraunces + Newsreader + Inter cover Latin-1/Latin-Extended; non-Latin transcript glyphs fall back
+  to the system UI stack via the `font-family` fallback chain (DESIGN.md §11).

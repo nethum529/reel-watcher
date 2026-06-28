@@ -8,7 +8,7 @@ export function Input({ className, type, ...props }: InputHTMLAttributes<HTMLInp
     <input
       type={type ?? 'text'}
       className={cn(
-        'h-11 w-full rounded-lg border border-input bg-card px-3 font-sans text-sm text-foreground transition-colors',
+        'h-11 w-full rounded-md border border-input bg-card px-3 font-sans text-sm text-foreground transition-colors',
         'placeholder:text-placeholder hover:border-border-strong focus-visible:border-primary',
         'disabled:cursor-not-allowed disabled:opacity-50',
         className,
