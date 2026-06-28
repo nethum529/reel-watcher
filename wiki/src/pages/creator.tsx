@@ -1,23 +1,57 @@
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
+import { Inbox } from 'lucide-react'
 import { usePosts } from '@/data/store'
+import type { Post } from '@/data/types'
 import { Masthead } from '@/components/masthead'
+import { Breadcrumb } from '@/components/breadcrumb'
+import { PostRow } from '@/components/post-row'
+import { EmptyState } from '@/components/empty-state'
 import { LoadBoundary } from '@/components/load-boundary'
 
-// STUB (leg-Creator builds the body): masthead with the @handle + real count slab,
-// then a placeholder for the dense list of this creator's posts.
+// Single creator (#/creator/:creator): breadcrumb back to the index → signature
+// masthead (@handle + post-count slab) → that creator's posts as dense rows,
+// newest first (DESIGN §4 "Creator · post list"). Empty state when the handle has
+// no posts. Rows sit directly under the page h1, so PostRow renders an h2 (the
+// heading outline stays gap-free).
 function CreatorBody({ creator }: { creator: string }) {
   const posts = usePosts()
-  const count = posts.filter((p) => p.creator === creator).length
+  const mine = useMemo<Post[]>(
+    () =>
+      posts
+        .filter((p) => p.creator === creator)
+        .sort((a, b) => b.fetched_at - a.fetched_at),
+    [posts, creator],
+  )
   return (
     <>
-      <Masthead
-        overline="Creator"
-        title={`@${creator}`}
-        slab={`${count} ${count === 1 ? 'post' : 'posts'}`}
+      <Breadcrumb
+        items={[{ label: 'Creators', to: '/creators' }, { label: `@${creator}` }]}
       />
-      <p className="mt-8 font-sans text-body text-muted-foreground md:mt-12">
-        TODO (leg-Creator): posts from @{creator}.
-      </p>
+      <div className="mt-4">
+        <Masthead
+          overline="Creator"
+          title={`@${creator}`}
+          slab={`${mine.length} ${mine.length === 1 ? 'post' : 'posts'}`}
+        />
+      </div>
+      <div className="mt-8 md:mt-12">
+        {mine.length > 0 ? (
+          <ul className="flex flex-col">
+            {mine.map((post) => (
+              <li key={post.id}>
+                <PostRow post={post} as="h2" />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <EmptyState
+            icon={Inbox}
+            title={`No posts from @${creator}`}
+            hint="This creator isn't in the archive yet."
+          />
+        )}
+      </div>
     </>
   )
 }

@@ -5,8 +5,10 @@ import { CreatorList } from '@/components/creator-list'
 import { EmptyState } from '@/components/empty-state'
 import { LoadBoundary } from '@/components/load-boundary'
 
-// STUB (leg-Creators may extend: avatars/platform grouping). The index list is
-// trivial, so it renders for real from the shared CreatorList.
+// Creators index (#/creators): the signature masthead → a strict Swiss dense list
+// of every creator with its post count (shared CreatorList), each row linking to
+// #/creator/:creator. DESIGN §4 "Creators · index" — co-equal rows on the grid,
+// sorted by count then handle (useCreators).
 function CreatorsBody() {
   const posts = usePosts()
   const creators = useCreators(posts)
@@ -21,7 +23,11 @@ function CreatorsBody() {
         {creators.length > 0 ? (
           <CreatorList creators={creators} />
         ) : (
-          <EmptyState icon={Inbox} title="No creators yet" />
+          <EmptyState
+            icon={Inbox}
+            title="No creators yet"
+            hint="Saved posts group here by creator."
+          />
         )}
       </div>
     </>
