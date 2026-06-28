@@ -5,8 +5,10 @@ import { TopicGrid } from '@/components/topic-grid'
 import { EmptyState } from '@/components/empty-state'
 import { LoadBoundary } from '@/components/load-boundary'
 
-// STUB (leg-Topics may extend: sorting/filtering). The index grid itself is
-// trivial, so it renders for real from the shared TopicGrid.
+// The Topics index (#/topics): the signature masthead (INDEX eyebrow → "TOPICS"
+// Anton headline beside a single Orchid count slab → 2px rule), then a strict
+// Swiss grid of every tag with its post count, each tile linking to #/topic/:tag.
+// "Index" cadence is medium-density (co-equal tiles) — DESIGN §4.
 function TopicsBody() {
   const posts = usePosts()
   const topics = useTopics(posts)
