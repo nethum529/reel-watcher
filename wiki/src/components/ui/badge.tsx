@@ -10,7 +10,7 @@ export const badgeVariants = cva(
     variants: {
       variant: {
         default: 'border-border bg-muted text-muted-foreground',
-        selected: 'border-primary bg-accent-subtle text-primary',
+        selected: 'border-primary bg-gold-subtle text-primary',
       },
       size: {
         default: 'px-3 py-1',

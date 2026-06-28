@@ -5,6 +5,7 @@ import type { Post } from '@/data/types'
 import { usePosts } from '@/data/store'
 import { postTitle, hasTranscript, slideBlocks, isSafeHttpUrl } from '@/lib/post'
 import { Breadcrumb } from '@/components/breadcrumb'
+import { Masthead } from '@/components/masthead'
 import { PostMeta } from '@/components/post-meta'
 import { TagBadge } from '@/components/tag-badge'
 import { Separator } from '@/components/ui/separator'
@@ -36,7 +37,7 @@ function Transcript({ post }: { post: Post }) {
   return (
     <div className="font-serif text-read text-foreground">
       {paragraphs.map((para, i) => (
-        <p key={i} className="my-4 whitespace-pre-line first:mt-0">
+        <p key={i} className="my-[18px] whitespace-pre-line first:mt-0">
           {para}
         </p>
       ))}
@@ -49,76 +50,80 @@ function PostBody({ post }: { post: Post }) {
   const firstTag = post.tags[0]
 
   return (
-    <article className="flex flex-col gap-8">
-      <header className="flex flex-col gap-5">
+    <article className="mx-auto w-full max-w-[760px]">
+      <Masthead
+        overline={firstTag ?? 'Post'}
+        title={postTitle(post)}
+        subline={
+          <>
+            <PostMeta post={post} linkCreator className="text-center" />
+            {post.tags.length > 0 && (
+              <ul className="flex flex-wrap justify-center gap-2">
+                {post.tags.map((tag) => (
+                  <li key={tag}>
+                    <TagBadge tag={tag} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        }
+      />
+      <div className="mt-6 flex justify-center">
         <Breadcrumb
           items={[
-            { label: 'Home', to: '/' },
+            { label: 'Wiki', to: '/wiki' },
             ...(firstTag
               ? [{ label: firstTag, to: `/topic/${encodeURIComponent(firstTag)}` }]
               : []),
             { label: postTitle(post) },
           ]}
         />
-        <h1 className="font-serif text-[clamp(1.875rem,5vw,2.5rem)] font-medium leading-[1.1] tracking-[-0.02em] text-foreground">
-          {postTitle(post)}
-        </h1>
-        <div className="flex flex-col gap-4">
-          <PostMeta post={post} linkCreator />
-          {post.tags.length > 0 && (
-            <ul className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <li key={tag}>
-                  <TagBadge tag={tag} />
+      </div>
+
+      <div className="mt-16 md:mt-24">
+        {/* Subordinate signature: the reading column (BRAND §3) — dominant, 66ch,
+            left-aligned within its centered measure. No card chrome, no border. */}
+        <div className="measure-read mx-auto w-full">
+          {post.caption.trim() && (
+            <p className="mb-8 font-sans text-body text-muted-foreground">{post.caption.trim()}</p>
+          )}
+          <Transcript post={post} />
+        </div>
+
+        {/* Subordinate: slides/OCR + source, below the read, muted (BRAND §3). */}
+        {slides.length > 0 && (
+          <section className="measure-read mx-auto w-full">
+            <Separator className="my-12" />
+            <Overline className="mb-4">Slides</Overline>
+            <ul className="flex flex-col gap-6">
+              {slides.map((slide, i) => (
+                <li
+                  key={i}
+                  className="rounded-md border border-border bg-muted px-4 py-3 font-sans text-caption leading-relaxed text-muted-foreground"
+                >
+                  {slide}
                 </li>
               ))}
             </ul>
-          )}
-        </div>
-      </header>
-
-      <Separator />
-
-      {/* Signature element: the reading column (BRAND §3) — dominant, 66ch. */}
-      <div className="measure-read mx-auto w-full">
-        {post.caption.trim() && (
-          <p className="mb-8 font-sans text-body text-muted-foreground">{post.caption.trim()}</p>
+          </section>
         )}
-        <Transcript post={post} />
+
+        {isSafeHttpUrl(post.url) && (
+          <div className="measure-read mx-auto w-full">
+            <Separator className="my-12" />
+            <a
+              href={post.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonVariants({ variant: 'secondary' })}
+            >
+              <Icon icon={ExternalLink} size={16} />
+              {post.source ? `Open on ${post.source}` : 'Open original'}
+            </a>
+          </div>
+        )}
       </div>
-
-      {/* Subordinate: slides/OCR + source, below the read, muted (BRAND §3). */}
-      {slides.length > 0 && (
-        <section className="measure-read mx-auto w-full flex-col gap-4">
-          <Separator className="my-8" />
-          <Overline className="mb-4">Slides</Overline>
-          <ul className="flex flex-col gap-6">
-            {slides.map((slide, i) => (
-              <li
-                key={i}
-                className="rounded-lg border border-border bg-muted px-4 py-3 font-sans text-caption leading-relaxed text-muted-foreground"
-              >
-                {slide}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {isSafeHttpUrl(post.url) && (
-        <div className="measure-read mx-auto w-full">
-          <Separator className="my-8" />
-          <a
-            href={post.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={buttonVariants({ variant: 'secondary' })}
-          >
-            <Icon icon={ExternalLink} size={16} />
-            {post.source ? `Open on ${post.source}` : 'Open original'}
-          </a>
-        </div>
-      )}
     </article>
   )
 }
